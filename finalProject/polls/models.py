@@ -1,34 +1,7 @@
-from _csv import reader
-from django.db import models
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 # Create your models here.
-class Article(models.Model):
-    title = models.CharField(max_length=100)
-    Publication_date = models.DateField()
-    EstimatedReadingTime = models.IntegerField()
-    Author_id = models.ManyToManyField("Author")
-
-class BookMarks(models.Model):
-    article_id = models.ForeignKey("Article", on_delete=models.CASCADE , null=True, blank=True)
-    reader_id = models.ForeignKey("Reader", on_delete=models.CASCADE , null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-class Likes(models.Model):
-        date_of_like = models.DateTimeField(auto_now_add=True)
-        article_id = models.ForeignKey("Article", on_delete=models.CASCADE , null=True, blank=True)
-        reader_id = models.ForeignKey("Reader", on_delete=models.CASCADE , null=True, blank=True)
-
-class Comments(models.Model):
-    date_of_comment = models.DateTimeField(auto_now_add=True)
-    reader_id = models.ForeignKey("Reader", on_delete=models.CASCADE, null=True, blank=True)
-    article_id = models.ForeignKey("Article", on_delete=models.CASCADE, null=True, blank=True)
-    content = models.TextField()
-
-class Tags(models.Model):
-    article_id = models.ManyToManyField("Article", related_name="tags")
-
-
 class ReaderManager(BaseUserManager):
     def create_user(self, email, password = None):
         if not email or len(email) <= 0:
@@ -145,3 +118,37 @@ class Admin(AbstractBaseUser):
 
     def __str__(self):
         return self.first_name, self.last_name
+
+
+class Category(models.Model):
+    type = models.CharField(max_length=100)
+    number_of_articles = models.IntegerField()
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=100)
+    Publication_date = models.DateField()
+    EstimatedReadingTime = models.IntegerField()
+    Author_id = models.ManyToManyField("Author")
+    category_id = models.ForeignKey(Category , null=True, on_delete=models.CASCADE ,blank=True)
+
+class BookMarks(models.Model):
+    article_id = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
+    reader_id = models.ForeignKey( Reader, on_delete=models.CASCADE , null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Likes(models.Model):
+        date_of_like = models.DateTimeField(auto_now_add=True)
+        article_id = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
+        reader_id = models.ForeignKey(Reader, on_delete=models.CASCADE , null=True, blank=True)
+
+class Comments(models.Model):
+    date_of_comment = models.DateTimeField(auto_now_add=True)
+    reader_id = models.ForeignKey(Reader, on_delete=models.CASCADE, null=True, blank=True)
+    article_id = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField()
+
+class Tags(models.Model):
+    article_id = models.ManyToManyField(Article, related_name="tags")
+
+
