@@ -1,5 +1,10 @@
-from django.shortcuts import render
+# views.py
+from django.http import JsonResponse
 
-# Create your views here.
 def home(request):
-    return render(request , "base.html")
+    data = {
+        'message': 'Welcome from Django!',
+        'content': 'This data comes from your Django backend',
+        # Add any other data you want to send to React
+    }
+    return JsonResponse(data)
