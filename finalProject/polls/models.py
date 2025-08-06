@@ -1,154 +1,138 @@
 
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
+
 # Create your models here.
-class ReaderManager(BaseUserManager):
-    def create_user(self, email, password = None):
-        if not email or len(email) <= 0:
-            raise ValueError('The email must be valid')
-        if not password:
-            raise ValueError('The password must be valid')
+class UserManager(BaseUserManager):
+    def create_user(self,email,password=None,**extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-        reader = self.model(
-            email=self.normalize_email(email),
-        )
-        reader.set_password(password)
-        reader.save(using=self._db)
-        return reader
-    def create_superuser(self, email, password):
-       reader =  self.create_user(email = self.normalize_email(email), password = password)
-       reader.is_superuser = False
-       reader.is_staff = False
-       reader.is_admin = False
-       return reader
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("role", "admin")
+        return self.create_user(email, password, **extra_fields)
+
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True ,null=True,blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True,blank=True)
+
+    class Meta:
+        abstract = True
 
 
-class Reader(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = [("reader", "Reader"), ("author", "Author"), ("admin", "Admin")]
+    email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
     age = models.PositiveIntegerField()
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
 
-    objects = ReaderManager()
+    objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'age']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name", "role", "age"]
 
-    def __str__(self):
-        return self.username
+    @property
+    def is_admin(self):
+        return self.role == "admin"
 
-class AuthorManager(BaseUserManager):
-    def create_user(self, email, password = None):
-        if not email or len(email) <= 0:
-            raise ValueError('The email must be valid')
-        if not password:
-            raise ValueError('The password must be valid')
-        author = self.model(email=self.normalize_email(email))
-        author.set_password(password)
-        author.save(using=self._db)
-        return author
-    def create_superuser(self, email, password):
-        author = self.create_user(email = self.normalize_email(email), password = password)
-        author.is_superuser = False
-        author.is_staff = False
-        author.is_admin = False
-        return author
+    @property
+    def is_reader(self):
+        return self.role == "reader"
 
-class Author(AbstractBaseUser):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    age = models.PositiveIntegerField()
-    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-    BrithOfDate = models.DateField()
-
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    objects = AuthorManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'age']
-
-    def __str__(self):
-        return self.first_name , self.last_name
+    @property
+    def is_author(self):
+        return self.role == "author"
 
 
-
-class AdminManager(BaseUserManager):
-    def create_user(self, email, password = None):
-        if not email or len(email) <= 0:
-            raise ValueError('The email must be valid')
-        if not password:
-            raise ValueError('The password must be valid')
-        admin = self.model(
-            email=self.normalize_email(email),
-        )
-        admin.set_password(password)
-        admin.save(using=self._db)
-        return admin
-    def create_superuser(self, email, password):
-        admin = self.create_user(email = self.normalize_email(email), password = password)
-        admin.is_superuser = True
-        admin.is_admin = True
-        admin.is_staff = False
-        return admin
-
-
-class Admin(AbstractBaseUser):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    objects = AdminManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'age']
-
-    def __str__(self):
-        return self.first_name, self.last_name
 
 
 class Category(models.Model):
-    type = models.CharField(max_length=100)
-    number_of_articles = models.IntegerField()
+    CHOICES_CATEGORY = [
+        ('TECH', 'Technology'),
+        ('HEALTH', 'Health'),
+        ('EDU', 'Education'),
+        ('LIFESTYLE', 'Lifestyle'),
+        ('BUSINESS', 'Business'),
+        ('SPORTS', 'Sports'),
+        ('TRAVEL', 'Travel'),
+        ('FOOD', 'Food'),
+    ]
+    type = models.CharField(
+        max_length=20,
+        choices=CHOICES_CATEGORY,
+        default='TECH',
+        verbose_name='Category Type',
+        help_text='Select the type of this category'
+    )
 
 
-class Article(models.Model):
-    title = models.CharField(max_length=100)
-    Publication_date = models.DateField()
-    EstimatedReadingTime = models.IntegerField()
-    Author_id = models.ManyToManyField("Author")
-    category_id = models.ForeignKey(Category , null=True, on_delete=models.CASCADE ,blank=True)
+class Article(TimeStampedModel):
+    title = models.CharField(max_length=100 , verbose_name='Article title' , help_text='Enter the title of your article')
+    publication_date = models.DateField(verbose_name='Publication date' , help_text='Enter the publication date of your article',null=True,blank=True)
+    authors = models.ManyToManyField(User)
+    category = models.ForeignKey(Category , null=True, on_delete=models.CASCADE ,blank=True)
 
-class BookMarks(models.Model):
-    article_id = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
-    reader_id = models.ForeignKey( Reader, on_delete=models.CASCADE , null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+class BookMarks(TimeStampedModel):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
+    reader = models.ForeignKey( User, on_delete=models.CASCADE , null=True, blank=True)
 
 class Likes(models.Model):
         date_of_like = models.DateTimeField(auto_now_add=True)
-        article_id = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
-        reader_id = models.ForeignKey(Reader, on_delete=models.CASCADE , null=True, blank=True)
+        article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
+        reader = models.ForeignKey(User, on_delete=models.CASCADE , null=True, blank=True)
 
 class Comments(models.Model):
     date_of_comment = models.DateTimeField(auto_now_add=True)
-    reader_id = models.ForeignKey(Reader, on_delete=models.CASCADE, null=True, blank=True)
-    article_id = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+    reader = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
     content = models.TextField()
 
-class Tags(models.Model):
-    article_id = models.ManyToManyField(Article, related_name="tags")
+class Tag(models.Model):
+    articles = models.ManyToManyField(Article, related_name="tags")
 
 
+class ReaderProxy(User):
+    class Meta:
+        proxy = True
+        verbose_name = "Reader"
+        verbose_name_plural = "Readers"
+
+    def save(self, *args, **kwargs):
+        self.role = "reader"
+        super().save(*args, **kwargs)
+
+
+class AuthorProxy(User):
+    class Meta:
+        proxy = True
+        verbose_name = "Author"
+        verbose_name_plural = "Authors"
+    def save(self, *args, **kwargs):
+        self.role = "author"
+        super().save(*args, **kwargs)
+
+
+class AdminProxy(User):
+    class Meta:
+        proxy = True
+        verbose_name = "Admin"
+        verbose_name_plural = "Admins"
+    def save(self, *args, **kwargs):
+        self.role = "admin"
+        super().save(*args, **kwargs)
