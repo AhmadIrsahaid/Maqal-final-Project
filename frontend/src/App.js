@@ -7,22 +7,29 @@ function App() {
 
 const [data, setData] = useState([]);
 useEffect(() => {
-  axios.get("http://127.0.0.1:8000/api/home").then((respon) => setData(respon.data)).catch(error => console.error(error));
+  axios.get("http://127.0.0.1:8000/api/titile")
+    .then((res) => {
+      console.log("DATA:", res.data);
+      setData(res.data);
+    })
+    .catch((err) => console.error("ERROR:", err));
 }, []);
 
-  return (
+return (
   <div>
-    <Navbar/>
-      {data ? (
-        <>
-          <h1>{data.message}</h1>
-          <p>{data.content}</p>
-        </>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
+    <Navbar />
+    {data.length > 0 ? (
+      <div>
+        {data.map((item, index) => (
+          <h1 key={index}>{item.title}</h1>
+        ))}
+      </div>
+    ) : (
+      <p>Loading...</p>
+    )}
+  </div>
+);
+
 }
 
 export default App;

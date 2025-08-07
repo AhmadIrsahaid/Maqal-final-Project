@@ -4,16 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83afaa9a-8ad6-4781-a389-81fc2b629f46" name="Changes" comment="eid file structure with frontend file">
-      <change afterPath="$PROJECT_DIR$/backend/finalProject/polls/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="83afaa9a-8ad6-4781-a389-81fc2b629f46" name="Changes" comment="Connect backend with frontend">
+      <change afterPath="$PROJECT_DIR$/backend/finalProject/polls/api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/723f90c1-c60a-47ed-8db6-8ac9887b8300.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/723f90c1-c60a-47ed-8db6-8ac9887b8300.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/finalProject/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/finalProject/finalProject/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/finalProject/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
     </list>
@@ -99,6 +99,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\Maqal-final-Project\backend\finalProject\polls" />
       <recent name="C:\Users\user\Desktop\Maqal-final-Project\finalProject\polls\static\polls\js" />
       <recent name="C:\Users\user\Desktop\Maqal-final-Project\finalProject\polls" />
     </key>
@@ -150,7 +151,9 @@
       <workItem from="1754382679431" duration="6068000" />
       <workItem from="1754466466691" duration="11724000" />
       <workItem from="1754484538445" duration="1985000" />
-      <workItem from="1754512175648" duration="5750000" />
+      <workItem from="1754512175648" duration="6056000" />
+      <workItem from="1754557270558" duration="8595000" />
+      <workItem from="1754569838394" duration="8389000" />
     </task>
     <task id="LOCAL-00001" summary="DB setup done ...">
       <option name="closed" value="true" />
@@ -219,6 +222,8 @@
     <MESSAGE value="tset frontend" />
     <MESSAGE value="edit models" />
     <MESSAGE value="eid file structure with frontend file" />
-    <option name="LAST_COMMIT_MESSAGE" value="eid file structure with frontend file" />
+    <MESSAGE value="add frontend file" />
+    <MESSAGE value="Connect backend with frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Connect backend with frontend" />
   </component>
 </project>

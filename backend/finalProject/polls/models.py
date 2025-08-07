@@ -72,6 +72,7 @@ class Category(models.Model):
         ('SPORTS', 'Sports'),
         ('TRAVEL', 'Travel'),
         ('FOOD', 'Food'),
+        ('POLITICS','politics')
     ]
     type = models.CharField(
         max_length=20,
@@ -81,12 +82,15 @@ class Category(models.Model):
         help_text='Select the type of this category'
     )
 
+    def __str__(self):
+        return self.type
 
 class Article(TimeStampedModel):
     title = models.CharField(max_length=100 , verbose_name='Article title' , help_text='Enter the title of your article')
     publication_date = models.DateField(verbose_name='Publication date' , help_text='Enter the publication date of your article',null=True,blank=True)
     authors = models.ManyToManyField(User)
     category = models.ForeignKey(Category , null=True, on_delete=models.CASCADE ,blank=True)
+    content = models.TextField(null=True,blank=True )
 
 class BookMarks(TimeStampedModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
