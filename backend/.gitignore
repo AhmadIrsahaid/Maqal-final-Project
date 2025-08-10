@@ -12,7 +12,7 @@ ENV/
 VENV/
 *.env
 *.venv
-
+djangoEnv/
 # VSCode settings
 .vscode/
 
