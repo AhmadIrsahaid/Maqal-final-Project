@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="83afaa9a-8ad6-4781-a389-81fc2b629f46" name="Changes" comment="Connect backend with frontend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/finalProject/polls/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/finalProject/polls/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +145,7 @@
       <workItem from="1754557270558" duration="8595000" />
       <workItem from="1754569838394" duration="8389000" />
       <workItem from="1754849756052" duration="2493000" />
-      <workItem from="1754898922217" duration="1378000" />
+      <workItem from="1754898922217" duration="2483000" />
     </task>
     <task id="LOCAL-00001" summary="DB setup done ...">
       <option name="closed" value="true" />
