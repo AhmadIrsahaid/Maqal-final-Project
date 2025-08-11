@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
                 ('title', models.CharField(help_text='Enter the title of your article', max_length=100, verbose_name='Article title')),
                 ('publication_date', models.DateField(blank=True, help_text='Enter the publication date of your article', null=True, verbose_name='Publication date')),
-                ('authors', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
+                ('users', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
                 ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='polls.category')),
             ],
             options={
