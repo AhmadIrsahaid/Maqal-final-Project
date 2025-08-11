@@ -16,17 +16,17 @@ function Card() {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4 text-center">Hello from Card</h1>
+      <h1 className="mb-4 text-center">Articles</h1>
       {data.length > 0 ? (
         <div className="row g-4">
           {data.map((item, index) => (
             <div key={index} className="col-md-4"> 
               <div className="card h-100">
-                <img
+                {/* <img
                   src="https://via.placeholder.com/300x200"
                   className="card-img-top"
                   alt={item.title}
-                />
+                /> */}
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{item.title}</h5>
                   <p className="card-text">{item.content}</p>
