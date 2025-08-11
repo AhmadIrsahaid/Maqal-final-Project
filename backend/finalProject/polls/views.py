@@ -19,6 +19,7 @@ def list_articles(request):
         {
 
             'title': article.title,
+            'content' : article.content
 
         }
         for article in articles
