@@ -69,3 +69,11 @@ Desktop.ini
 *.db
 *.sqlite
 *.pyc
+
+
+# Ignore SQLite database
+db.sqlite3
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
