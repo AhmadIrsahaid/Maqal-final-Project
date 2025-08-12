@@ -11,8 +11,10 @@ urlpatterns = [
     path('edit/<int:pk>/', views.ArticleUpdateView.as_view() , name='edit-article'),
     path('article/<int:pk>/', views.ArticleDetailView.as_view() , name='article-detail'),
     path('delete/<int:pk>/', views.ArticleDeleteView.as_view() , name='article-delete'),
-
     path('user_list/', views.UserListView.as_view() , name='user-list'),
     path('user_create/', UserCreateView.as_view() , name='user-create'),
     path('user_detail/<int:pk>/', UserDetailView.as_view() , name='user-detail'),
+    path('', views.HomePageView.as_view(), name='home-page'),
+    # path('', views.BasePageView.as_view(), name='base-page'),
+    path('about', views.AboutPageView.as_view(), name='about-page'),
 ]
