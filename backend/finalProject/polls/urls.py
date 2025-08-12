@@ -1,9 +1,11 @@
 # polls/urls.py
-from django.urls import path
+from django.urls import path ,include
 from . import views
-from .views import ArticleCreateView, ArticleListView, UserCreateView , UserDetailView
-
+from .views import *
+from django.views.generic import TemplateView
 urlpatterns = [
+    path("accounts/", include("django.contrib.auth.urls")),
+    # path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path('api/home/', views.home, name='home'),
     path('api/card/' , views.list_articles , name='list_articles'),
     path('create/', ArticleCreateView.as_view() , name='create-article'),
@@ -17,4 +19,5 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home-page'),
     # path('', views.BasePageView.as_view(), name='base-page'),
     path('about', views.AboutPageView.as_view(), name='about-page'),
+    path("signup/", ReaderSignUpView.as_view(), name="signup"),
 ]
