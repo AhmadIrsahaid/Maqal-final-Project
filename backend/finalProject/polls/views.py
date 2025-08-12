@@ -1,7 +1,7 @@
 # views.py
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from polls.models import Article, User
 from django.urls import reverse_lazy
 from polls.form import *
@@ -14,7 +14,16 @@ def home(request):
     return JsonResponse(data)
 
 
+class BasePageView(TemplateView):
+    template_name = "base.html"
+    context_object_name = "base"
 
+
+class AboutPageView(TemplateView):
+    template_name = "About.html"
+
+class HomePageView(TemplateView):
+    template_name = "home.html"
 def list_articles(request):
     articles = Article.objects.all()
     data = [

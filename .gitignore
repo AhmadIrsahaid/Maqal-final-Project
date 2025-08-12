@@ -63,3 +63,9 @@ yarn-error.log
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+
+# database files
+*.db
+*.sqlite
+*.pyc

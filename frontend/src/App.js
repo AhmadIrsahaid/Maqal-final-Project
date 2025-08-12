@@ -1,8 +1,11 @@
 import './App.css';
 import Card from './components/Card';
+import { Routes, Route, Link } from "react-router-dom";
 // import { useState, useEffect } from 'react';
 // import axios from 'axios';
 import Navbar from './components/Navbar';
+import About from './pages/About';
+import Home from './pages/Home';
 
 function App() {
 
@@ -18,8 +21,14 @@ function App() {
 
 return (
   <div>
-    <Navbar />
-    <Card/>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/articles" element={<Card />} />
+      <Route path="/About" element={<About/>} />
+      {/* Add other routes here as needed */}
+    </Routes>
+    {/* <Navbar /> */}
+    {/* <Card/> */}
   </div>
 );
 

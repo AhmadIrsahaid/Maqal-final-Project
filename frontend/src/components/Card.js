@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Navbar from "./Navbar";
 
 function Card() {
   const [data, setData] = useState([]);
@@ -15,8 +16,11 @@ function Card() {
   }, []); // ✅ Added [] so it runs only once
 
   return (
+    <>
+    <Navbar/>
     <div className="container mt-5">
-      <h1 className="mb-4 text-center">Articles</h1>
+      
+      <h1 className="mb-4 text-center">All Articles</h1>
       {data.length > 0 ? (
         <div className="row g-4">
           {data.map((item, index) => (
@@ -41,7 +45,7 @@ function Card() {
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </div></>
   );
 }
 
