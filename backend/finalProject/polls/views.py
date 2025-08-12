@@ -1,8 +1,10 @@
 # views.py
+from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from polls.models import Article
+from polls.models import Article, User
 from django.urls import reverse_lazy
+from polls.form import *
 
 def home(request):
     data = {
@@ -58,3 +60,23 @@ class ArticleDeleteView(DeleteView):
     template_name = "articles/article_delete.html"
     context_object_name = "articles"
     success_url = reverse_lazy("list-articles")
+
+# Authors views
+class UserListView(ListView):
+    model = User
+    template_name = "users/list_user.html"
+    context_object_name = "users"
+
+
+class UserCreateView(CreateView):
+    model = User
+    form_class = ReaderCreationForm
+    template_name = "users/create_user.html"
+    context_object_name = "users"
+    success_url = reverse_lazy("user-list")
+
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = "users/detail_user.html"
+    context_object_name = "users"

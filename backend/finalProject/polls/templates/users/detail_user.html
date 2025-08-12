@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title> Reader Detail</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+  <!-- Breadcrumbs -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Readers</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ users.username }}</li>
+    </ol>
+  </nav>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h1 class="h3 mb-3">
+        👤 {{ users.get_full_name|default:users.username }}
+      </h1>
+
+      <!-- Meta info -->
+      <div class="mb-3 text-muted">
+        <span class="me-3">📧 {{ users.email }}</span>
+        {% if reader.age %}
+          <span class="me-3">🎂 Age: {{ users.age }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Optional extra info -->
+      {% if users.username %}
+        <p><strong>Username:</strong> {{ users.username }}</p>
+      {% endif %}
+
+      <!-- Actions -->
+      <div class="d-flex gap-2 mt-4">
+        <a  class="btn btn-outline-secondary">← Back to list</a>
+        <a href="#" class="btn btn-primary">Edit</a>
+        <a href="#"  class="btn btn-danger"
+           onclick="return confirm('Are you sure you want to delete this reader?');">
+          Delete
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
