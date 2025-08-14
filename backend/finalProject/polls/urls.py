@@ -1,7 +1,7 @@
 # polls/urls.py
 from django.urls import path ,include
 from . import views
-from .views import *
+from polls.views import *
 from django.views.generic import TemplateView
 urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
@@ -20,4 +20,5 @@ urlpatterns = [
     # path('', views.BasePageView.as_view(), name='base-page'),
     path('about', views.AboutPageView.as_view(), name='about-page'),
     path("signup/", ReaderSignUpView.as_view(), name="signup"),
+    path("article/<int:pk>/comment/", CommentCreateView.as_view(), name="article-add-comment"),
 ]

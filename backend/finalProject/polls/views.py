@@ -1,23 +1,23 @@
 # views.py
-from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from polls.models import Article, User
-from django.urls import reverse_lazy
-from polls.form import *
-from django.views.generic import TemplateView
-from .models import Article
 from django.contrib.auth import authenticate, login
-from django.contrib.auth import authenticate, login
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from .form import ReaderCreationForm
+from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
+
+from .models import Article, User, Comments
+from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment
+
+
 def home(request):
-    data = {
+    return JsonResponse({
         'message': 'Welcome from Django!',
         'content': 'This data comes from your Django backend',
-    }
-    return JsonResponse(data)
+    })
 
 
 class BasePageView(TemplateView):
@@ -29,7 +29,6 @@ class AboutPageView(TemplateView):
     template_name = "About.html"
 
 
-
 class HomePageView(TemplateView):
     template_name = "home.html"
 
@@ -38,53 +37,75 @@ class HomePageView(TemplateView):
         ctx["articles"] = Article.objects.all()
         return ctx
 
+
 def list_articles(request):
-    articles = Article.objects.all()
     data = [
-        {
-
-            'title': article.title,
-            'content' : article.content
-
-        }
-        for article in articles
+        {"title": a.title, "content": a.content}
+        for a in Article.objects.all()
     ]
     return JsonResponse(data, safe=False)
 
 
-
-# article views
 class ArticleListView(ListView):
     model = Article
     context_object_name = "articles"
     template_name = "articles/article_list.html"
 
+
 class ArticleCreateView(CreateView):
     model = Article
     fields = "__all__"
     template_name = "articles/article_create.html"
-    context_object_name = "articles"
+    context_object_name = "article"
     success_url = reverse_lazy("list-articles")
+
 
 class ArticleUpdateView(UpdateView):
     model = Article
     fields = "__all__"
     template_name = "articles/article_update.html"
-    context_object_name = "articles"
+    context_object_name = "article"
     success_url = reverse_lazy("list-articles")
+
 
 class ArticleDetailView(DetailView):
     model = Article
     template_name = "articles/article_detail.html"
     context_object_name = "articles"
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['can_edit'] = self.object.can_edit(self.request.user)
+        ctx['comment_form'] = AddComment()
+        return ctx
+
+    def get_success_url(self):
+         return reverse('article-detail',kwargs={'pk' : self.object.pk})
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = AddComment(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.article = self.object
+            comment.save()
+            return redirect(self.get_success_url())
+        ctx = self.get_context_data()
+        ctx['comment_form'] = form
+        return self.render_to_response(ctx)
+
+
+
+
 class ArticleDeleteView(DeleteView):
     model = Article
     template_name = "articles/article_delete.html"
-    context_object_name = "articles"
+    context_object_name = "article"
     success_url = reverse_lazy("list-articles")
 
-# Reader views
+
 class UserListView(ListView):
     model = User
     template_name = "users/list_user.html"
@@ -95,15 +116,14 @@ class UserCreateView(CreateView):
     model = User
     form_class = ReaderCreationForm
     template_name = "users/create_user.html"
-    context_object_name = "users"
+    context_object_name = "user"
     success_url = reverse_lazy("user-list")
 
 
 class UserDetailView(DetailView):
     model = User
     template_name = "users/detail_user.html"
-    context_object_name = "users"
-
+    context_object_name = "user"
 
 
 class ReaderSignUpView(CreateView):
@@ -112,8 +132,27 @@ class ReaderSignUpView(CreateView):
     template_name = "registration/signup.html"
 
     def form_valid(self, form):
-        form.save()
-        auth_user = authenticate(self.request, email=User.email, password=form.cleaned_data["password1"])
+        user = form.save()
+        auth_user = authenticate(self.request,
+                                 email=form.cleaned_data.get("email"),
+                                 password=form.cleaned_data.get("password1"))
         if auth_user:
             login(self.request, auth_user)
         return super().form_valid(form)
+
+
+class CommentCreateView(CreateView):
+        model = Comments
+        form_class = AddComment
+        template_name = "articles/article_detail.html"
+        context_object_name = "comment"
+
+        def form_valid(self, form):
+            form.instance.user = self.request.user
+            form.instance.article_id = self.kwargs["pk"]
+            return super().form_valid(form)
+
+        def get_success_url(self):
+            return reverse("article-detail", args=[self.kwargs["pk"]])
+
+

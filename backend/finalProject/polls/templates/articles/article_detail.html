@@ -1,32 +1,39 @@
 {% extends 'base.html' %}
 {% block detail %}
 
-
 <div class="container py-5">
-  <!-- Breadcrumbs -->
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Articles</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'list-articles' %}">Articles</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{ articles.title }}</li>
     </ol>
   </nav>
 
   <div class="card shadow-sm">
     <div class="card-body">
-      <h1 class="h3 mb-3">{{ articles.title }}</h1>
+      <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+        <h1 class="h3 mb-0">{{ articles.title }}</h1>
 
-      <div class="mb-3 text-muted">
-        <span class="me-3">
-          📅
+        <div class="d-flex gap-2">
+          <a href="{% url 'list-articles' %}" class="btn btn-outline-secondary">
+            ← Back to list
+          </a>
+
+          {% if can_edit%}
+            <a href="{% url 'edit-article' articles.pk %}" class="btn btn-primary">✏️ Edit Article</a>
+            <a href="{% url 'article-delete' articles.pk %}" class="btn btn-danger">🗑️ Delete Article</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-muted small mb-3">
+        <span class="me-3">📅
           {% if articles.publication_date %}
             {{ articles.publication_date|date:"F j, Y" }}
-          {% else %}
-            Not published
-          {% endif %}
+          {% else %} Not published {% endif %}
         </span>
 
-        <span class="me-3">
-          🏷️
+        <span class="me-3">🏷️
           {% if articles.category %}
             <span class="badge text-bg-secondary">{{ articles.category }}</span>
           {% else %}
@@ -35,14 +42,15 @@
         </span>
       </div>
 
-
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Authors</h2>
         {% with authors_qs=articles.authors.all %}
           {% if authors_qs %}
             <div class="d-flex flex-wrap gap-2">
               {% for author in authors_qs %}
-                <span class="badge text-bg-primary">{{ author.get_full_name|default:author.username }}</span>
+                <span class="badge text-bg-primary">
+                  {{ author.get_full_name|default:author.username }}
+                </span>
               {% endfor %}
             </div>
           {% else %}
@@ -51,7 +59,6 @@
         {% endwith %}
       </div>
 
-      <!-- Content -->
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Content</h2>
         <div class="fs-6">
@@ -63,13 +70,30 @@
         </div>
       </div>
 
-      <div class="d-flex gap-2">
-        <a href="{% url 'list-articles'  %}" class="btn btn-outline-secondary">← Back to list</a>
-        <a href=" {% url 'edit-article' articles.pk %}" class="btn btn-primary">✏️  Edit Article</a>
-        <a href="{% url 'article-delete'  articles.pk%}" class="btn btn-danger" >
-          🗑️ Delete Article
-        </a>
+      <hr class="my-4">
+
+      <div>
+        <h2 class="h6 text-uppercase text-muted mb-3">Comments on this Article</h2>
+          <form method="post">
+        {% csrf_token %}
+        {{ comment_form.content }}
+        <button type="submit" class="btn btn-primary">comment</button>
+           </form>
+
+        {% if articles.comments.all %}
+  <ul class="list-group list-group-flush">
+    {% for c in articles.comments.all %}
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div>
+          <div class="mt-1">{{ c.content }}</div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
       </div>
+
     </div>
   </div>
 </div>
