@@ -98,7 +98,7 @@ class Article(TimeStampedModel):
             return False
         return getattr(user, "role") == "admin" or self.authors.filter(id=user.id).exists()
 
-    def can_create(self, user):
+    def can_create_article(self, user):
         if not user.is_authenticated:
             return False
         return getattr(user, "role", None) == "author" or self.authors.filter(id=user.id).exists()

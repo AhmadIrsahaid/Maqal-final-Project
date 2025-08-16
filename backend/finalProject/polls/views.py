@@ -51,7 +51,15 @@ class ArticleListView(ListView):
     context_object_name = "articles"
     template_name = "articles/article_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
 
+        can_create = (
+                user.is_authenticated and getattr(user, "role", "") in ("admin", "author")
+        )
+        context["can_create_article"] = can_create
+        return context
 class ArticleCreateView(CreateView):
     model = Article
     fields = "__all__"
