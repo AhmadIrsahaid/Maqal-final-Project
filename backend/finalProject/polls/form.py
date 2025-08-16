@@ -9,8 +9,9 @@ from django.core.exceptions import ValidationError
 class ReaderCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("email", "username", "first_name", "last_name" , "age" ,"password1", "password2","profile_photo")
-        is_reader = True
+        fields = ("email", "username", "first_name", "last_name" , "age" ,"password1", "password2"
+                      ,"profile_photo" , "role")
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

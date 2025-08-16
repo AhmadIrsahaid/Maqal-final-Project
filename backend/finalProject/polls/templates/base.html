@@ -27,6 +27,9 @@
         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home-page' %}">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'about-page' %}">About</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'list-articles' %}">All Articles</a></li>
+         {% if user.is_admin %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'user-list' %}">All Users </a></li>
+         {% endif %}
       </ul>
 
 
@@ -61,8 +64,10 @@
     {% block home %}{% endblock %}
     {% block update %}{% endblock %}
     {% block delete %}{% endblock %}
-    {% block create %}
-    {% endblock %}
+    {% block create %}{% endblock %}
+    {% block userList %}{% endblock %}
+    {% block userDetail %}{% endblock %}
+     {% block userCreate %}{% endblock %}
   </main>
 	<footer class="py-5 bg-dark">
     <div class="container">

@@ -19,6 +19,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ article.title }}</h5>
             <p class="badge text-bg-success ">{{ article.category }}</p>
+            <p class="badge text-bg-primary ">📅{{ article.publication_date | date:"F j, Y" }}</p>
             <a href="{% url 'article-detail' article.pk %}" class="btn btn-primary d-block">Read Article</a>
           </div>
         </div>
