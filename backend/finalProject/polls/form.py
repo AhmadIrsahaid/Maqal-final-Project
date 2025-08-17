@@ -1,5 +1,7 @@
+# forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm # For basic user creation
+from .models import Comments
+from django.contrib.auth.forms import UserCreationForm
 from .models import  User
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -7,8 +9,9 @@ from django.core.exceptions import ValidationError
 class ReaderCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("email", "username", "first_name", "last_name" , "age" ,"password1", "password2","profile_photo")
-        is_reader = True
+        fields = ("email", "username", "first_name", "last_name" , "age" ,"password1", "password2"
+                      ,"profile_photo" , "role")
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,3 +46,18 @@ class ReaderSignUpForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class AddComment(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ["content"]
+        widgets = {
+            "content": forms.TextInput(attrs={
+                "class": "form-control md-3",
+                "placeholder": "Write your comment here...",
+                "row" :"1"
+            })
+        }
+
+
