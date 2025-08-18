@@ -1,5 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{# كلاس لصفحة About فقط (لا تضعه داخل بلوك آخر) #}
+{% block body_class %}about-page{% endblock %}
 
 {% block about %}
-	<h1>About page</h1>
+  <!-- HERO 1 -->
+  <section class="hero-about">
+    <div class="container">
+      <div class="row justify-content-lg-end">
+        <div class="col-12 col-lg-7">
+          <div class="p-4 p-md-5 bg-glass">
+            <h1 class="display-5 fw-bold mb-3 text-white">About Maqal Panorama</h1>
+            <h2 class="h4 fw-semibold mb-3 text-white-50">Who We Are</h2>
+            <p class="lead mb-0 max-w-700 text-black-20">
+              We are a Palestinian digital platform dedicated to shedding light on the Palestinian reality across various fields from technology, education, and healthcare to culture, art, and social issues. Our goal is to be both a media hub and a home that brings together Palestinian writers and readers from diverse backgrounds, fostering dialogue and the exchange of knowledge and perspectives that truly reflect the aspirations and concerns of our society.
+              <br><br>
+              We are a free Palestinian space that speaks transparently about the reality of its people, spreading knowledge and actively working to promote the rich and diverse culture of the Palestinian community. Our mission is to contribute to building an aware and progressive society that honors its history and values its future.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <section class="hero-about">
+      <div class="container">
+        <div class="row justify-content-rg-end">
+          <div class="col-12 col-lg-7">
+            <div class="p-4 p-md-5 bg-glass">
+              <h1 class="display-5 fw-bold mb-3 text-black-30">
+                About Maqal Panorama
+              </h1>
+              <h2 class="h4 fw-semibold mb-3 text-white-50">Why ?</h2>
+              <p class="lead mb-0 max-w-700 text-black-20">
+                We chose the name Maqal Panorama because it embodies the
+                platform’s comprehensive and holistic vision in presenting
+                content. The word “Maqal” (Article) clearly reflects the essence
+                of the platform as a space for publishing articles and written
+                expression, while “Panorama” conveys the complete scene,
+                offering a diverse and panoramic perspective.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 {% endblock %}

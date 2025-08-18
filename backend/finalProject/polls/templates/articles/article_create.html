@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
-{% block create %}
-	<div class="container mt-5">
-    <h1 class="mb-4 text-primary">📘 Create a New Article</h1>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="post" class="needs-validation" novalidate>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-success">Create Article</button>
-            </form>
-        </div>
+{% block create %}
+<div class="container mt-5">
+  <h1 class="mb-4 text-primary">📘 Create a New Article</h1>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {{ form.media }}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-success">Create Article</button>
+        <a href="{% url 'list-articles' %}" class="btn btn-outline-secondary">Cancel</a>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}
-

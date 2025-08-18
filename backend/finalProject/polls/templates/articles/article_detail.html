@@ -19,7 +19,7 @@
             ← Back to list
           </a>
 
-          {% if can_edit%}
+          {% if can_edit %}
             <a href="{% url 'edit-article' articles.pk %}" class="btn btn-primary">✏️ Edit Article</a>
             <a href="{% url 'article-delete' articles.pk %}" class="btn btn-danger">🗑️ Delete Article</a>
           {% endif %}
@@ -30,7 +30,9 @@
         <span class="me-3">📅
           {% if articles.publication_date %}
             {{ articles.publication_date|date:"F j, Y" }}
-          {% else %} Not published {% endif %}
+          {% else %}
+            Not published
+          {% endif %}
         </span>
 
         <span class="me-3">🏷️
@@ -42,6 +44,7 @@
         </span>
       </div>
 
+      <!-- Authors -->
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Authors</h2>
         {% with authors_qs=articles.authors.all %}
@@ -63,7 +66,7 @@
         <h2 class="h6 text-uppercase text-muted mb-2">Content</h2>
         <div class="fs-6">
           {% if articles.content %}
-            {{ articles.content|linebreaksbr }}
+            {{ articles.content|safe }}
           {% else %}
             <span class="text-muted">No content</span>
           {% endif %}
@@ -72,26 +75,31 @@
 
       <hr class="my-4">
 
+      <!-- Comments -->
       <div>
         <h2 class="h6 text-uppercase text-muted mb-3">Comments on this Article</h2>
-          <form method="post">
-        {% csrf_token %}
-        {{ comment_form.content }}
-        <button type="submit" class="btn btn-primary">comment</button>
-           </form>
 
-        {% if articles.comments.all %}
-  <ul class="list-group list-group-flush">
-    {% for c in articles.comments.all %}
-      <li class="list-group-item d-flex justify-content-between align-items-start">
-        <div>
-          <div class="mt-1">{{ c.content }}</div>
-        </div>
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+        <form method="post" class="mb-4">
+          {% csrf_token %}
+          {{ comment_form.as_p }}
+          <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
 
+        {% with comments=articles.comments.all %}
+          {% if comments %}
+            <ul class="list-group list-group-flush">
+              {% for c in comments %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="mt-1">{{ c.content|linebreaksbr }}</div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-muted">No comments yet.</span>
+          {% endif %}
+        {% endwith %}
       </div>
 
     </div>

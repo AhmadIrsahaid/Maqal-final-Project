@@ -1,8 +1,0 @@
-.navbar .search-wrap {
-    max-width: 520px;
-    width: 100%;
-  }
-  @media (max-width: 991.98px) {
-    .navbar .search-wrap { max-width: 100%; }
-    .navbar .user-actions { width: 100%; }
-  }

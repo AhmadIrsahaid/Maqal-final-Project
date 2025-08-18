@@ -1,7 +1,8 @@
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from ckeditor_uploader.fields import RichTextUploadingField
+# from ckeditor.fields import RichTextField
+from django.conf import settings
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -59,6 +60,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_author(self):
         return self.role == "author"
 
+    class Meta:
+        permissions = (
+
+        )
+
 
 
 
@@ -87,16 +93,25 @@ class Category(models.Model):
 
 
 class Article(TimeStampedModel):
-    title = models.CharField(max_length=100 , verbose_name='Article title' , help_text='Enter the title of your article')
-    publication_date = models.DateField(verbose_name='Publication date' , help_text='Enter the publication date of your article',null=True,blank=True)
-    authors = models.ManyToManyField(User)
-    category = models.ForeignKey(Category , null=True, on_delete=models.CASCADE ,blank=True)
-    content = models.TextField(null=True,blank=True )
+    title = models.CharField(
+        max_length=100,
+        verbose_name='Article title',
+        help_text='Enter the title of your article'
+    )
+    publication_date = models.DateField(
+        verbose_name='Publication date',
+        help_text='Enter the publication date of your article',
+        null=True, blank=True
+    )
+    authors = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    category = models.ForeignKey('Category', null=True, blank=True, on_delete=models.CASCADE)
+    content = RichTextUploadingField(null=True, blank=True)
+    isFreatured = models.BooleanField(default=False, null=True, blank=True)
 
     def can_edit(self, user):
         if not user.is_authenticated:
             return False
-        return getattr(user, "role") == "admin" or self.authors.filter(id=user.id).exists()
+        return getattr(user, "role", None) == "admin" or self.authors.filter(id=user.id).exists()
 
     def can_create_article(self, user):
         if not user.is_authenticated:
@@ -118,7 +133,7 @@ class Comments(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return f"Comment by {self.user} on {self.article}"
+        return f"Comment by {self.reader} on {self.article}"
 
 class Tag(models.Model):
     articles = models.ManyToManyField(Article, related_name="tags")
