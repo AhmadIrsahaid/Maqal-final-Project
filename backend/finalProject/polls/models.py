@@ -4,6 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # from ckeditor.fields import RichTextField
 from django.conf import settings
 
+
 # Create your models here.
 class UserManager(BaseUserManager):
     def create_user(self,email,password=None,**extra_fields):
@@ -60,13 +61,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_author(self):
         return self.role == "author"
 
-    class Meta:
-        permissions = (
-
-        )
-
-
-
 
 class Category(models.Model):
     CHOICES_CATEGORY = [
@@ -117,19 +111,21 @@ class Article(TimeStampedModel):
         if not user.is_authenticated:
             return False
         return getattr(user, "role", None) == "author" or self.authors.filter(id=user.id).exists()
+
 class BookMarks(TimeStampedModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
     reader = models.ForeignKey( User, on_delete=models.CASCADE , null=True, blank=True)
 
 class Likes(models.Model):
         date_of_like = models.DateTimeField(auto_now_add=True)
-        article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
-        reader = models.ForeignKey(User, on_delete=models.CASCADE , null=True, blank=True)
+        article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name='article_likes', null=True, blank=True)
+        reader = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
 
 class Comments(models.Model):
     date_of_comment = models.DateTimeField(auto_now_add=True)
     reader = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True , related_name="comments")
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True, related_name="comments")
     content = models.TextField()
 
     def __str__(self):

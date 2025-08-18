@@ -41,7 +41,7 @@ body.about-page .hero-about{
   min-height: 80vh;
   background:
     linear-gradient(80deg, var(--overlay-dark) 0%, var(--overlay-fade) 70%),
-    url("../images/download221.jpeg") center/cover no-repeat fixed;
+    url("../images/palestine_map.jpeg") center/cover no-repeat fixed;
   display:flex; align-items:center; color:#fff; position:relative;
 }
 
@@ -76,7 +76,7 @@ body.about-page .navbar-min{
     min-height: 70vh;
     background:
       linear-gradient(90deg, var(--overlay-dark, rgba(0,0,0,.65)) 0%, var(--overlay-fade, rgba(0,0,0,.18)) 70%),
-      url("../images/download.jpeg") center/cover no-repeat fixed;
+      url("../../static/images/download.jpeg") center/cover no-repeat fixed;
     display: flex;
     align-items: center;
     color: #fff;

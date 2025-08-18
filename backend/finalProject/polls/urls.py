@@ -21,4 +21,5 @@ urlpatterns = [
     path('about/', views.AboutPageView.as_view(), name='about-page'),
     path("signup/", ReaderSignUpView.as_view(), name="signup"),
     path("article/<int:pk>/comment/", CommentCreateView.as_view(), name="article-add-comment"),
+    path("search/", SearchResultsView.as_view(), name="search_results")
 ]

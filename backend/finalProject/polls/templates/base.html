@@ -37,7 +37,7 @@
 
         {#Search bar#}
       <div class="search-wrap mx-lg-auto my-2 my-lg-0">
-        <form class="input-group" role="search" method="get" >
+        <form class="input-group" role="search" action="{% url 'search_results' %}" method="get" >
           <input type="text" class="form-control" name="q" placeholder="Search articles..." aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>

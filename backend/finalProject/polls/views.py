@@ -8,7 +8,7 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-
+from django.db.models import Q
 from .models import Article, User, Comments
 from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment
 
@@ -67,6 +67,9 @@ class ArticleCreateView(CreateView):
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
 
+    def test_func(self):
+        return self.request.user.has_perm("auth.add_article")
+
 
 class ArticleUpdateView(UpdateView):
     model = Article
@@ -74,6 +77,9 @@ class ArticleUpdateView(UpdateView):
     template_name = "articles/article_update.html"
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
+
+    def test_func(self):
+        return self.request.user.has_perm("auth.change_article")
 
 
 class ArticleDetailView(DetailView):
@@ -113,6 +119,9 @@ class ArticleDeleteView(DeleteView):
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
 
+    def test_func(self):
+        return self.request.user.has_perm("auth.delete_article")
+
 
 class UserListView(ListView):
     model = User
@@ -126,12 +135,14 @@ class UserCreateView(CreateView):
     template_name = "users/create_user.html"
     context_object_name = "user"
     success_url = reverse_lazy("user-list")
-
+    def test_func(self):
+        return self.request.user.has_perm("auth.add_user")
 
 class UserDetailView(DetailView):
     model = User
     template_name = "users/detail_user.html"
     context_object_name = "user"
+
 
 
 class ReaderSignUpView(CreateView):
@@ -164,3 +175,15 @@ class CommentCreateView(CreateView):
             return reverse("article-detail", args=[self.kwargs["pk"]])
 
 
+class SearchResultsView(ListView):
+    model = Article
+    context_object_name = "articles"
+    template_name = "articles/article_list.html"
+
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        return Article.objects.filter(
+            Q(title__icontains=query) |
+            Q(publication_date__icontains=query)
+        )
