@@ -9,10 +9,10 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
-from .models import Article, User, Comments
-from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment
-
-
+from .models import Article, User, Comments, Likes
+from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment,LikeForm
+from django.views import View
+from django.contrib import messages
 def home(request):
     return JsonResponse({
         'message': 'Welcome from Django!',
@@ -89,8 +89,21 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['can_edit'] = self.object.can_edit(self.request.user)
-        ctx['comment_form'] = AddComment()
+        article = self.object
+        user = self.request.user
+
+
+        ctx["comment_form"] = AddComment()
+        ctx["like_form"] = LikeForm()
+
+
+        ctx["likes_count"] = article.article_likes.count()
+        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
+
+
+        ctx["comments"] = article.comments.select_related("reader").order_by("-date_of_comment")
+
+        ctx["can_edit"] = getattr(article, "can_edit", lambda u: False)(user)
         return ctx
 
     def get_success_url(self):
@@ -187,3 +200,17 @@ class SearchResultsView(ListView):
             Q(title__icontains=query) |
             Q(publication_date__icontains=query)
         )
+
+class LikeToggleView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        article = Article.objects.get(pk=self.kwargs["pk"])
+        like, created = Likes.objects.get_or_create(article=article, reader=request.user)
+        if created:
+            messages.success(request, "Liked.")
+        else:
+            like.delete()
+            messages.info(request, "Like removed.")
+        return redirect("article-detail", pk=article.pk)
+
+
+

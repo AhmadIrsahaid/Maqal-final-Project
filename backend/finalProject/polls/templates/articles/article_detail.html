@@ -61,7 +61,25 @@
           {% endif %}
         {% endwith %}
       </div>
-
+       {# --- Like Form --- #}
+      <div class="mb-3 d-flex align-items-center gap-2">
+        {% if user.is_authenticated %}
+          <form method="post" class="d-inline" action="{% url 'add-like' articles.id %}">
+            {% csrf_token %}
+            {{ like_form }}
+            <button type="submit"
+                    name="submit_like"
+                    class="btn btn-sm {% if user_has_liked %}btn-outline-danger{% else %}btn-outline-primary{% endif %}">
+              {% if user_has_liked %}💔 Unlike{% else %}👍 Like{% endif %}
+              <span class="badge text-bg-secondary ms-1">{{ likes_count }}</span>
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">
+            👍 Like <span class="badge text-bg-secondary ms-1">{{ likes_count }}</span>
+          </a>
+        {% endif %}
+      </div>
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Content</h2>
         <div class="fs-6">

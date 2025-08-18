@@ -60,3 +60,7 @@ class AddComment(forms.ModelForm):
         }
 
 
+class LikeForm(forms.Form):
+
+    pass
+
