@@ -17,7 +17,7 @@
 
   <main class="flex-grow-1">
  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom py-2"  >
-  <div class="container px-4 px-lg-5">
+  <div class="container px-4 px-lg-16">
     <a class="navbar-brand fw-semibold" href="/">Maqal Panorama</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,14 +38,14 @@
       </ul>
 
         {#Search bar#}
-      <div class="search-wrap w-10  ">
+      <div class="search-wrap w-5">
         <form class="input-group" role="search" action="{% url 'search_results' %}" method="get" >
           <input type="text" class="form-control" name="q" placeholder="Search articles..." aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>
 
-
+     {# username and logout button #}
       <div class="user-actions d-flex align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
         <a class="btn btn-outline-dark">
           <i class="fa-solid fa-circle-user me-1"></i>
@@ -136,9 +136,9 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small">
       <div>© 2025 Maqal Panorama. All rights reserved.</div>
       <div class="d-flex gap-3">
-        <a class="text-decoration-none link-light-50" href="#privacy">Privacy</a>
-        <a class="text-decoration-none link-light-50" href="#terms">Terms</a>
-        <a class="text-decoration-none link-light-50" href="#accessibility">Accessibility</a>
+        <a class="text-decoration-none link-light-50" href="#">Privacy</a>
+        <a class="text-decoration-none link-light-50" href="#">Terms</a>
+        <a class="text-decoration-none link-light-50" href="#">Accessibility</a>
       </div>
     </div>
   </div>

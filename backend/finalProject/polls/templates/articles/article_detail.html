@@ -60,8 +60,8 @@
         {% with authors_qs=articles.authors.all %} {% if authors_qs %}
         <div class="d-flex flex-wrap gap-2">
           {% for author in authors_qs %}
-          <span class="badge text-bg-primary">
-            {{ author.get_full_name|default:author.username }}
+          <span class="badge text-bg-dark">
+            {{ author.first_name}} {{ author.last_name }}
           </span>
           {% endfor %}
         </div>
@@ -69,6 +69,7 @@
         <span class="text-muted">No authors</span>
         {% endif %} {% endwith %}
       </div>
+    <div class="d-flex align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
       {# --- Like Form --- #}
       <div class="mb-3">
         {% if user.is_authenticated %}
@@ -81,78 +82,43 @@
           <button
             type="submit"
             name="submit_like"
-            class="btn-like {% if user_has_liked %}liked{% endif %}"
             aria-pressed="{% if user_has_liked %}true{% else %}false{% endif %}"
-            title="{% if user_has_liked %}Remove like{% else %}Like this article{% endif %}"
-          >
-            <span class="icon" aria-hidden="true">
-              <svg
-                class="heart-stroke"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="m8 2.748-.717-.737C5.6.281 2.514 3.36 4.5 6.065c1.4 1.9 3.5 3.385 3.5 3.385s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748Z"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  fill="none"
-                ></path>
-              </svg>
-
-              <svg
-                class="heart-fill"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fill="currentColor"
-                  d="M8 2.748l-.717-.737C5.6.281 2.514 3.36 4.5 6.065 5.9 7.965 8 9.45 8 9.45s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748z"
-                ></path>
-              </svg>
-            </span>
-            <span class="label"
-              >{% if user_has_liked %}Liked{% else %}Like{% endif %}</span
+            title="{% if user_has_liked %}Remove like{% else %}Like this article{% endif %}"  
+            class="btn btn-outline-primary {% if user_has_liked %}liked{% endif %}"
             >
+            <i class="bi bi-hand-thumbs-up"></i>
+            
+            <span class="label">{% if user_has_liked %}UnLike{% else %}Like{% endif %}</span>
             <span class="count">{{ likes_count }}</span>
           </button>
         </form>
         {% else %}
         <a href="{% url 'login' %}" class="btn-like" title="Log in to like">
           <span class="icon" aria-hidden="true">
-            <svg
-              class="heart-stroke"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path
-                d="m8 2.748-.717-.737C5.6.281 2.514 3.36 4.5 6.065c1.4 1.9 3.5 3.385 3.5 3.385s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748Z"
-                stroke="currentColor"
-                stroke-width="1.4"
-                fill="none"
-              ></path>
-            </svg>
           </span>
           <span class="label">Like</span>
           <span class="count">{{ likes_count }}</span>
         </a>
         {% endif %}
       </div>
-
+      {# Bookmark form #}
     <div class="mb-3">
         {% if user.is_authenticated %}
         	<form method="post" action="{% url 'add-bookmark' articles.id %}" class="d-inline">
-            {% csrf_token %} {{ bookmarks_form }}8
+            {% csrf_token %} {{ bookmarks_form }}
            <button
             type="submit"
             name="submit_Bookmark"
-            class="btn btn-primary"
-          > <i class="bi bi-bookmarks"></i> BookMark</button>
+            class="btn btn-outline-success"
+          > <i class="bi bi-bookmarks"></i>
+           <span class="label"> {% if user_has_bookMark %} UnBookmark {% else %} Bookmark {% endif %} </span>
+           <span class="count">{{ bookmarks_count }}
+           </span>
+           </button>
             </form>
         {% endif %}
     </div>
-
+</div>
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Content</h2>
         <div class="fs-6">
@@ -164,7 +130,7 @@
 
       <hr class="my-4" />
 
-      <!-- Comments -->
+      <!-- Comments section -->
       <div>
         <h2 class="h6 text-uppercase text-muted mb-3">
           Comments on this Article

@@ -92,16 +92,18 @@ class ArticleDetailView(DetailView):
         article = self.object
         user = self.request.user
 
-
+        # Define forms
         ctx["comment_form"] = AddComment()
         ctx["like_form"] = LikeForm()
         ctx["bookmarks_form"] = BookmarkForm()
 
-
+        # count the number of likes and bookMark
         ctx["likes_count"] = article.article_likes.count()
         ctx["bookmarks_count"] = article.bookmarks.count()
-        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
 
+        #chnage the status if like and bookmark
+        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
+        ctx["user_has_bookMark"] = user.is_authenticated and article.bookmarks.filter(reader=user).exists()
 
         ctx["comments"] = article.comments.select_related("reader").order_by("-date_of_comment")
 
@@ -110,7 +112,6 @@ class ArticleDetailView(DetailView):
 
     def get_success_url(self):
          return reverse('article-detail',kwargs={'pk' : self.object.pk})
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -124,8 +125,6 @@ class ArticleDetailView(DetailView):
         ctx = self.get_context_data()
         ctx['comment_form'] = form
         return self.render_to_response(ctx)
-
-
 
 
 class ArticleDeleteView(DeleteView):
@@ -195,7 +194,6 @@ class SearchResultsView(ListView):
     context_object_name = "articles"
     template_name = "articles/article_list.html"
     # target_date =
-
 
     def get_queryset(self):
         query = self.request.GET.get("q")
