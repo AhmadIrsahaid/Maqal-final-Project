@@ -36,6 +36,7 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title", "publication_date","get_author","get_category","content")
+    readonly_fields = ('content_preview',)
 
     def get_author(self,obj):
         return " ,".join([author.username for author in obj.authors.all()])
@@ -44,6 +45,11 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_category(self, obj):
         return str(obj.category) if obj.category else "-"
     get_category.short_description = "Category"
+
+    def content_preview(self, obj):
+        return mark_safe(obj.content)
+
+    content_preview.short_description = "Content"
 
 
 @admin.register(Category)

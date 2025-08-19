@@ -8,11 +8,11 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-
-from .models import Article, User, Comments
-from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment
-
-
+from django.db.models import Q
+from .models import Article, User, Comments, Likes
+from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment,LikeForm
+from django.views import View
+from django.contrib import messages
 def home(request):
     return JsonResponse({
         'message': 'Welcome from Django!',
@@ -67,6 +67,9 @@ class ArticleCreateView(CreateView):
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
 
+    def test_func(self):
+        return self.request.user.has_perm("auth.add_article")
+
 
 class ArticleUpdateView(UpdateView):
     model = Article
@@ -74,6 +77,9 @@ class ArticleUpdateView(UpdateView):
     template_name = "articles/article_update.html"
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
+
+    def test_func(self):
+        return self.request.user.has_perm("auth.change_article")
 
 
 class ArticleDetailView(DetailView):
@@ -83,8 +89,21 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['can_edit'] = self.object.can_edit(self.request.user)
-        ctx['comment_form'] = AddComment()
+        article = self.object
+        user = self.request.user
+
+
+        ctx["comment_form"] = AddComment()
+        ctx["like_form"] = LikeForm()
+
+
+        ctx["likes_count"] = article.article_likes.count()
+        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
+
+
+        ctx["comments"] = article.comments.select_related("reader").order_by("-date_of_comment")
+
+        ctx["can_edit"] = getattr(article, "can_edit", lambda u: False)(user)
         return ctx
 
     def get_success_url(self):
@@ -113,6 +132,9 @@ class ArticleDeleteView(DeleteView):
     context_object_name = "article"
     success_url = reverse_lazy("list-articles")
 
+    def test_func(self):
+        return self.request.user.has_perm("auth.delete_article")
+
 
 class UserListView(ListView):
     model = User
@@ -126,12 +148,14 @@ class UserCreateView(CreateView):
     template_name = "users/create_user.html"
     context_object_name = "user"
     success_url = reverse_lazy("user-list")
-
+    def test_func(self):
+        return self.request.user.has_perm("auth.add_user")
 
 class UserDetailView(DetailView):
     model = User
     template_name = "users/detail_user.html"
     context_object_name = "user"
+
 
 
 class ReaderSignUpView(CreateView):
@@ -162,5 +186,31 @@ class CommentCreateView(CreateView):
 
         def get_success_url(self):
             return reverse("article-detail", args=[self.kwargs["pk"]])
+
+
+class SearchResultsView(ListView):
+    model = Article
+    context_object_name = "articles"
+    template_name = "articles/article_list.html"
+
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        return Article.objects.filter(
+            Q(title__icontains=query) |
+            Q(publication_date__icontains=query)
+        )
+
+class LikeToggleView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        article = Article.objects.get(pk=self.kwargs["pk"])
+        like, created = Likes.objects.get_or_create(article=article, reader=request.user)
+        if created:
+            messages.success(request, "Liked.")
+        else:
+            like.delete()
+            messages.info(request, "Like removed.")
+        return redirect("article-detail", pk=article.pk)
+
 
 

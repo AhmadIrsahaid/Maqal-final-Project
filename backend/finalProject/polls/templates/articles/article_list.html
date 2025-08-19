@@ -7,8 +7,6 @@
         <a href="{% url 'create-article' %}" class="btn btn-success mb-3">➕ Add New Article</a>
     {% endif %}
 
-
-
     <ul class="list-group">
         {% for article in articles %}
             <a  href="{% url 'article-detail' article.pk %}" class="list-group-item">{{ article.title }}</a>

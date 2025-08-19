@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
 {% block home %}
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h3 class="display-4 fw-bolder">
-        We are a Palestinian Arab platform that aims to document articles related to Palestinian issues.
-      </h3>
+<header class="hero-home">
+  <div class="container">
+    <div class="row justify-content-lg-end">
+      <div class="col-12 col-lg-7">
+        <div class="p-4 p-md-5 bg-glass">
+          <h1 class="display-5 fw-bold mb-0 text-white">
+            We are a Palestinian Arab platform that aims to document articles related to Palestinian issues.
+          </h1>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -14,7 +18,10 @@
 <div class="container my-4">
   <div class="row g-3">
     {% for article in articles %}
-<div class="col-12 col-md-6 col-lg-4">
+        {% if article.isFreatured %}
+
+
+        <div class="col-12 col-md-6 col-lg-4">
   <div class="card h-100">
     <div class="card-body d-flex flex-column">
       <h5 class="card-title mb-2">{{ article.title }}</h5>
@@ -31,7 +38,7 @@
   </div>
 </div>
 
-
+{% endif %}
     {% empty %}
       <p>No articles available yet.</p>
     {% endfor %}

@@ -12,7 +12,6 @@ class ReaderCreationForm(UserCreationForm):
         fields = ("email", "username", "first_name", "last_name" , "age" ,"password1", "password2"
                       ,"profile_photo" , "role")
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for fieldName in ['password1', 'password2']:
@@ -60,4 +59,8 @@ class AddComment(forms.ModelForm):
             })
         }
 
+
+class LikeForm(forms.Form):
+
+    pass
 
