@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block AuthorList %}
+	
+
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">👥 Author List</h1>
+     <a href="{% url 'user-create' %}" class="btn btn-success mb-3">➕ Add New Author</a>
+    <ul class="list-group">
+        {% for user in users %}
+            {% if user.is_author %}
+            <a  class="list-group-item"  href="{% url 'user-detail' user.id %}">
+                {{ user.first_name }} {{ user.last_name }}
+            </a>
+            {% endif %}
+        {% empty %}
+            <li class="list-group-item text-muted">No users found</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

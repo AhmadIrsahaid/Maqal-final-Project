@@ -64,3 +64,6 @@ class LikeForm(forms.Form):
 
     pass
 
+class BookmarkForm(forms.Form):
+    pass
+

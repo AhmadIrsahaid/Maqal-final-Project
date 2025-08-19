@@ -1,17 +1,22 @@
-{% extends 'base.html' %}
-{% block detail %}
+{% extends 'base.html' %} {% block detail %}
 
 <div class="container py-5">
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'list-articles' %}">Articles</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ articles.title }}</li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'list-articles' %}">Articles</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ articles.title }}
+      </li>
     </ol>
   </nav>
 
   <div class="card shadow-sm">
     <div class="card-body">
-      <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+      <div
+        class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3"
+      >
         <h1 class="h3 mb-0">{{ articles.title }}</h1>
 
         <div class="d-flex gap-2">
@@ -20,26 +25,31 @@
           </a>
 
           {% if can_edit %}
-            <a href="{% url 'edit-article' articles.pk %}" class="btn btn-primary">✏️ Edit Article</a>
-            <a href="{% url 'article-delete' articles.pk %}" class="btn btn-danger">🗑️ Delete Article</a>
+          <a href="{% url 'edit-article' articles.pk %}" class="btn btn-primary"
+            >✏️ Edit Article</a
+          >
+          <a
+            href="{% url 'article-delete' articles.pk %}"
+            class="btn btn-danger"
+            >🗑️ Delete Article</a
+          >
           {% endif %}
         </div>
       </div>
 
       <div class="text-muted small mb-3">
-        <span class="me-3">📅
-          {% if articles.publication_date %}
-            {{ articles.publication_date|date:"F j, Y" }}
-          {% else %}
-            Not published
-          {% endif %}
+        <span class="me-3"
+          >📅 {% if articles.publication_date %}
+            {{articles.publication_date|date:"F j, Y" }}
+            {% else %} Not published
+        {%endif %}
         </span>
 
-        <span class="me-3">🏷️
-          {% if articles.category %}
-            <span class="badge text-bg-secondary">{{ articles.category }}</span>
+        <span class="me-3"
+          >🏷️ {% if articles.category %}
+          <span class="badge text-bg-secondary">{{ articles.category }}</span>
           {% else %}
-            <span class="badge text-bg-light border">No category</span>
+          <span class="badge text-bg-light border">No category</span>
           {% endif %}
         </span>
       </div>
@@ -47,79 +57,140 @@
       <!-- Authors -->
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Authors</h2>
-        {% with authors_qs=articles.authors.all %}
-          {% if authors_qs %}
-            <div class="d-flex flex-wrap gap-2">
-              {% for author in authors_qs %}
-                <span class="badge text-bg-primary">
-                  {{ author.get_full_name|default:author.username }}
-                </span>
-              {% endfor %}
-            </div>
-          {% else %}
-            <span class="text-muted">No authors</span>
-          {% endif %}
-        {% endwith %}
-      </div>
-       {# --- Like Form --- #}
-      <div class="mb-3 d-flex align-items-center gap-2">
-        {% if user.is_authenticated %}
-          <form method="post" class="d-inline" action="{% url 'add-like' articles.id %}">
-            {% csrf_token %}
-            {{ like_form }}
-            <button type="submit"
-                    name="submit_like"
-                    class="btn btn-sm {% if user_has_liked %}btn-outline-danger{% else %}btn-outline-primary{% endif %}">
-              {% if user_has_liked %}💔 Unlike{% else %}👍 Like{% endif %}
-              <span class="badge text-bg-secondary ms-1">{{ likes_count }}</span>
-            </button>
-          </form>
+        {% with authors_qs=articles.authors.all %} {% if authors_qs %}
+        <div class="d-flex flex-wrap gap-2">
+          {% for author in authors_qs %}
+          <span class="badge text-bg-primary">
+            {{ author.get_full_name|default:author.username }}
+          </span>
+          {% endfor %}
+        </div>
         {% else %}
-          <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">
-            👍 Like <span class="badge text-bg-secondary ms-1">{{ likes_count }}</span>
-          </a>
+        <span class="text-muted">No authors</span>
+        {% endif %} {% endwith %}
+      </div>
+      {# --- Like Form --- #}
+      <div class="mb-3">
+        {% if user.is_authenticated %}
+        <form
+          method="post"
+          action="{% url 'add-like' articles.id %}"
+          class="d-inline"
+        >
+          {% csrf_token %} {{ like_form }}
+          <button
+            type="submit"
+            name="submit_like"
+            class="btn-like {% if user_has_liked %}liked{% endif %}"
+            aria-pressed="{% if user_has_liked %}true{% else %}false{% endif %}"
+            title="{% if user_has_liked %}Remove like{% else %}Like this article{% endif %}"
+          >
+            <span class="icon" aria-hidden="true">
+              <svg
+                class="heart-stroke"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <path
+                  d="m8 2.748-.717-.737C5.6.281 2.514 3.36 4.5 6.065c1.4 1.9 3.5 3.385 3.5 3.385s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748Z"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  fill="none"
+                ></path>
+              </svg>
+
+              <svg
+                class="heart-fill"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill="currentColor"
+                  d="M8 2.748l-.717-.737C5.6.281 2.514 3.36 4.5 6.065 5.9 7.965 8 9.45 8 9.45s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748z"
+                ></path>
+              </svg>
+            </span>
+            <span class="label"
+              >{% if user_has_liked %}Liked{% else %}Like{% endif %}</span
+            >
+            <span class="count">{{ likes_count }}</span>
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn-like" title="Log in to like">
+          <span class="icon" aria-hidden="true">
+            <svg
+              class="heart-stroke"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="m8 2.748-.717-.737C5.6.281 2.514 3.36 4.5 6.065c1.4 1.9 3.5 3.385 3.5 3.385s2.1-1.485 3.5-3.385C13.486 3.36 10.4.28 8.717 2.01L8 2.748Z"
+                stroke="currentColor"
+                stroke-width="1.4"
+                fill="none"
+              ></path>
+            </svg>
+          </span>
+          <span class="label">Like</span>
+          <span class="count">{{ likes_count }}</span>
+        </a>
         {% endif %}
       </div>
+
+    <div class="mb-3">
+        {% if user.is_authenticated %}
+        	<form method="post" action="{% url 'add-bookmark' articles.id %}" class="d-inline">
+            {% csrf_token %} {{ bookmarks_form }}8
+           <button
+            type="submit"
+            name="submit_Bookmark"
+            class="btn btn-primary"
+          > <i class="bi bi-bookmarks"></i> BookMark</button>
+            </form>
+        {% endif %}
+    </div>
+
       <div class="mb-4">
         <h2 class="h6 text-uppercase text-muted mb-2">Content</h2>
         <div class="fs-6">
-          {% if articles.content %}
-            {{ articles.content|safe }}
-          {% else %}
-            <span class="text-muted">No content</span>
+          {% if articles.content %} {{ articles.content|safe }} {% else %}
+          <span class="text-muted">No content</span>
           {% endif %}
         </div>
       </div>
 
-      <hr class="my-4">
+      <hr class="my-4" />
 
       <!-- Comments -->
       <div>
-        <h2 class="h6 text-uppercase text-muted mb-3">Comments on this Article</h2>
+        <h2 class="h6 text-uppercase text-muted mb-3">
+          Comments on this Article
+        </h2>
 
         <form method="post" class="mb-4">
-          {% csrf_token %}
-          {{ comment_form.as_p }}
+          {% csrf_token %} {{ comment_form.as_p }}
           <button type="submit" class="btn btn-primary">Comment</button>
         </form>
 
-        {% with comments=articles.comments.all %}
-          {% if comments %}
-            <ul class="list-group list-group-flush">
-              {% for c in comments %}
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div>
-                    <div class="mt-1">{{ c.content|linebreaksbr }}</div>
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <span class="text-muted">No comments yet.</span>
-          {% endif %}
-        {% endwith %}
+        {% with comments=articles.comments.all %} {% if comments %}
+        <ul class="list-group list-group-flush">
+          {% for c in comments %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-start"
+          >
+            <div>
+              <div class="mt-1">{{ c.content|linebreaksbr }}</div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <span class="text-muted">No comments yet.</span>
+        {% endif %} {% endwith %}
       </div>
-
     </div>
   </div>
 </div>
