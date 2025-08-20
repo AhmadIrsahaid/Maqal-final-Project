@@ -113,7 +113,7 @@ class Article(TimeStampedModel):
         return getattr(user, "role", None) == "author" or self.authors.filter(id=user.id).exists()
 
 class BookMarks(TimeStampedModel):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True , related_name='bookmarks')
     reader = models.ForeignKey( User, on_delete=models.CASCADE , null=True, blank=True)
 
 class Likes(models.Model):

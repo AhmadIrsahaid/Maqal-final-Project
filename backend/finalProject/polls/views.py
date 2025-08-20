@@ -9,8 +9,8 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
-from .models import Article, User, Comments, Likes
-from polls.form import ReaderCreationForm, ReaderSignUpForm ,AddComment,LikeForm
+from .models import Article, User, Comments, Likes , BookMarks
+from polls.form import ReaderCreationForm, ReaderSignUpForm, AddComment, LikeForm, BookmarkForm
 from django.views import View
 from django.contrib import messages
 def home(request):
@@ -92,14 +92,18 @@ class ArticleDetailView(DetailView):
         article = self.object
         user = self.request.user
 
-
+        # Define forms
         ctx["comment_form"] = AddComment()
         ctx["like_form"] = LikeForm()
+        ctx["bookmarks_form"] = BookmarkForm()
 
-
+        # count the number of likes and bookMark
         ctx["likes_count"] = article.article_likes.count()
-        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
+        ctx["bookmarks_count"] = article.bookmarks.count()
 
+        #chnage the status if like and bookmark
+        ctx["user_has_liked"] = user.is_authenticated and article.article_likes.filter(reader=user).exists()
+        ctx["user_has_bookMark"] = user.is_authenticated and article.bookmarks.filter(reader=user).exists()
 
         ctx["comments"] = article.comments.select_related("reader").order_by("-date_of_comment")
 
@@ -108,7 +112,6 @@ class ArticleDetailView(DetailView):
 
     def get_success_url(self):
          return reverse('article-detail',kwargs={'pk' : self.object.pk})
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -122,8 +125,6 @@ class ArticleDetailView(DetailView):
         ctx = self.get_context_data()
         ctx['comment_form'] = form
         return self.render_to_response(ctx)
-
-
 
 
 class ArticleDeleteView(DeleteView):
@@ -192,13 +193,13 @@ class SearchResultsView(ListView):
     model = Article
     context_object_name = "articles"
     template_name = "articles/article_list.html"
-
+    # target_date =
 
     def get_queryset(self):
         query = self.request.GET.get("q")
         return Article.objects.filter(
-            Q(title__icontains=query) |
-            Q(publication_date__icontains=query)
+            Q(title__icontains=query)
+            # | Q(Article.objects.filter(publication_date=target_date))
         )
 
 class LikeToggleView(LoginRequiredMixin, View):
@@ -213,4 +214,21 @@ class LikeToggleView(LoginRequiredMixin, View):
         return redirect("article-detail", pk=article.pk)
 
 
+class Bookmarks(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        article = Article.objects.get(pk=self.kwargs["pk"])
+        bookmark , create = BookMarks.objects.get_or_create(article=article , reader=request.user)
+        if create:
+            messages.success(request, "Bookmark created.")
+        else:
+            bookmark.delete()
+            messages.info(request, "Bookmark removed.")
+        return redirect("article-detail", pk=article.pk)
+
+
+
+class AuthorListView(ListView):
+    model = User
+    context_object_name = "users"
+    template_name = "Authors/AuthorList.html"
 

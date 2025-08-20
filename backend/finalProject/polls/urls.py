@@ -3,6 +3,9 @@ from django.urls import path ,include
 from . import views
 from polls.views import *
 from django.views.generic import TemplateView
+
+from .form import BookmarkForm
+
 urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     # path("", TemplateView.as_view(template_name="home.html"), name="home"),
@@ -23,5 +26,7 @@ urlpatterns = [
     path("article/<int:pk>/comment/", CommentCreateView.as_view(), name="article-add-comment"),
     path("search/", SearchResultsView.as_view(), name="search_results"),
     path("likes/<int:pk>",LikeToggleView.as_view(),name="add-like"),
+    path("authors/list",AuthorListView.as_view(),name="author-list"),
+    path("article/<int:pk>/bookmark",Bookmarks.as_view(),name="add-bookmark"),
 
 ]
