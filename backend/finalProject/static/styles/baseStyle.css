@@ -1,9 +1,13 @@
-
 .navbar .search-wrap {
   max-width: 520px;
   width: 120%;
 }
-@media (max-width: 991.98px) {
+
+@media (min-width: 992px){
+  .navbar-brand .brand-logo{ height: 56px; }
+}
+
+@media (max-width: 992px) {
   .navbar .search-wrap { max-width: 100%; }
   .navbar .user-actions { width: 100%; }
 }
@@ -31,6 +35,9 @@
   --accent-gold: #FFC857;
   --text-soft:  #F6F8FF;
   --text-soft-2: rgba(246,248,255,.92);
+  --bs-body-color : #212529;
+  --bs-body-bg : #ffff;
+  --bs-border-color : #dee2e6;
 }
 
 body{ background:#ffffff; color:#212529; }
@@ -122,3 +129,11 @@ body.about-page .navbar-min{
   .btn-like.liked .heart-stroke{ display:none; }
   .btn-like.liked .heart-fill{ display:inline; }
 
+ .category-card{
+    border: 2px solid #000 !important;
+    border-radius: .75rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .category-card:hover{
+    transform: translateY(-3px);
+  }

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block bookmarks %}
+	<div class="container mt-5">
+    <h1 class="mb-4 text-primary">📄 Article List</h1>
+    	<ul class="list-group">
+        {% for article in articles %}
+            <a  href="{% url 'article-detail' article.pk %}" class="list-group-item">{{ article.title }}</a>
+        {% empty %}
+            <li class="list-group-item text-muted">No articles available</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

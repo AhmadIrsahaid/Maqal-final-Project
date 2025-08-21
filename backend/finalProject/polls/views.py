@@ -8,11 +8,12 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.db.models import Q
-from .models import Article, User, Comments, Likes , BookMarks
+from django.db.models import Q, Count
+from .models import Article, User, Comments, Likes, BookMarks, Category
 from polls.form import ReaderCreationForm, ReaderSignUpForm, AddComment, LikeForm, BookmarkForm
 from django.views import View
 from django.contrib import messages
+from typing import List
 def home(request):
     return JsonResponse({
         'message': 'Welcome from Django!',
@@ -231,4 +232,39 @@ class AuthorListView(ListView):
     model = User
     context_object_name = "users"
     template_name = "Authors/AuthorList.html"
+
+class AllBookMarkView(ListView):
+    model = Article
+    template_name = "articles/allBookMarks.html"
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        return Article.objects.filter(bookmarks__reader=self.request.user)
+
+
+class AllCategoriesView(ListView):
+    model = Category
+    context_object_name = "categories"
+    template_name = "articles/AllCategoriesList.html"
+
+    def get_queryset(self):
+        # Annotate each category with the number of related articles
+        return Category.objects.annotate(article_count=Count("articles"))
+
+    # def get_context_data(self, **kwargs):
+    #     ctx = super().get_context_data(**kwargs)
+    #
+    #     # annotate categories with article_count
+    #     categories_qs = Category.objects.annotate(article_count=Count("articles"))
+    #
+    #     # (A) list of dicts to loop over in the template
+    #     ctx["categories"] = list(map(
+    #         lambda c: {"id": c.id, "type": c.type, "article_count": c.article_count},
+    #         categories_qs
+    #     ))
+    #
+    #     # (B) optional: quick lookup map {category_id: count}
+    #     ctx["article_counts"] = dict(map(lambda c: (c.id, c.article_count), categories_qs))
+    #
+    #     return ctx
 

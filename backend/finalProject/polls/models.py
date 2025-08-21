@@ -81,9 +81,13 @@ class Category(models.Model):
         verbose_name='Category Type',
         help_text='Select the type of this category'
     )
+    # photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
     def __str__(self):
         return self.type
+
+    # def number_of_article(self):
+    #     return Article.objects.filter(category=self.id).count()
 
 
 class Article(TimeStampedModel):
@@ -98,14 +102,14 @@ class Article(TimeStampedModel):
         null=True, blank=True
     )
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    category = models.ForeignKey('Category', null=True, blank=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE , related_name='articles')
     content = RichTextUploadingField(null=True, blank=True)
     isFreatured = models.BooleanField(default=False, null=True, blank=True)
 
     def can_edit(self, user):
         if not user.is_authenticated:
             return False
-        return getattr(user, "role", None) == "admin" or self.authors.filter(id=user.id).exists()
+        return getattr(user, "role","") in ("admin", "author")
 
     def can_create_article(self, user):
         if not user.is_authenticated:
@@ -114,7 +118,7 @@ class Article(TimeStampedModel):
 
 class BookMarks(TimeStampedModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE , null=True, blank=True , related_name='bookmarks')
-    reader = models.ForeignKey( User, on_delete=models.CASCADE , null=True, blank=True)
+    reader = models.ForeignKey( User, on_delete=models.CASCADE , null=True, blank=True,related_name='reader')
 
 class Likes(models.Model):
         date_of_like = models.DateTimeField(auto_now_add=True)
