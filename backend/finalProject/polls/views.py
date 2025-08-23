@@ -247,24 +247,19 @@ class AllCategoriesView(ListView):
     context_object_name = "categories"
     template_name = "articles/AllCategoriesList.html"
 
-    def get_queryset(self):
-        # Annotate each category with the number of related articles
-        return Category.objects.annotate(article_count=Count("articles"))
 
-    # def get_context_data(self, **kwargs):
-    #     ctx = super().get_context_data(**kwargs)
-    #
-    #     # annotate categories with article_count
-    #     categories_qs = Category.objects.annotate(article_count=Count("articles"))
-    #
-    #     # (A) list of dicts to loop over in the template
-    #     ctx["categories"] = list(map(
-    #         lambda c: {"id": c.id, "type": c.type, "article_count": c.article_count},
-    #         categories_qs
-    #     ))
-    #
-    #     # (B) optional: quick lookup map {category_id: count}
-    #     ctx["article_counts"] = dict(map(lambda c: (c.id, c.article_count), categories_qs))
-    #
-    #     return ctx
+    def get_context_data(self, **kwargs):
+
+        ctx = super().get_context_data(**kwargs)
+
+        dirt = {}
+
+        all_categories = Category.objects.annotate(counter=Count("articles"))
+
+        count = dirt.list(map(
+            lambda cat : {"category_id" : cat.id , "number_of_articles" : cat.articles.count()}, all_categories
+        ))
+
+        ctx["article_counts"] = count
+        return ctx
 
