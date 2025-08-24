@@ -18,7 +18,16 @@
   <main class="flex-grow-1">
  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom py-2"  >
   <div class="container px-4 px-lg-16">
-    <a class="navbar-brand fw-semibold" href="/">Maqal Panorama</a>
+    <a class="navbar-brand fw-semibold" href="/">
+  <img
+    src="../../static/images/Maqal-pano-logo.svg"
+    alt="Maqal Panorama"
+    class="brand-logo d-inline-block align-text-top "
+    style="height:70px; width:auto; display:block"
+    onerror="this.onerror=null; this.src='/static/images/pano%20light-03.svg';"
+  >
+</a>
+
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -36,27 +45,40 @@
               <li class="nav-item"><a class="nav-link" href="{% url 'user-list' %}">Users </a></li>
          {% endif %}
       </ul>
-
-        {#Search bar#}
-      <div class="search-wrap w-5">
+    <div class="d-flex align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
+         {#Search bar#}
+      <div class="search-wrap ">
         <form class="input-group" role="search" action="{% url 'search_results' %}" method="get" >
           <input type="text" class="form-control" name="q" placeholder="Search articles..." aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>
 
-     {# username and logout button #}
-      <div class="user-actions d-flex align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
-        <a class="btn btn-outline-dark">
-          <i class="fa-solid fa-circle-user me-1"></i>
-          <span class="d-none d-sm-inline">{{ user.username }}</span>
-        </a>
 
-        <form action="{% url 'logout' %}" method="post" class="m-0">
+     {# username and logout button #}
+
+    <div class="btn-group">
+      <a type="button" class=" d-flex btn btn-outline-dark align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
+          <i class="bi bi-person-circle"></i>
+          <span class="d-none d-sm-inline">   {{ user.username }}</span>
+        </a>
+    <a type="button" class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+      <span class="visually-hidden">Toggle Dropdown</span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="{% url 'all-bookmark' user.id %}">All Bookmarks</a></li>
+      <li><a class="dropdown-item" href="{% url 'all-categories' %}">All Categories</a></li>
+      <hr class="dropdown-divider"/>
+      <li>
+          <form action="{% url 'logout' %}" method="post" class="m-0">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger">Log Out</button>
-        </form>
-      </div>
+          <button type="submit" class="btn btn-outline-danger dropdown-item">Log Out</button>
+       </form>
+      </li>
+      <li></li>
+    </ul>
+  </div>
+    </div>
     </div>
   </div>
 </nav>
@@ -72,6 +94,8 @@
     {% block userDetail %}{% endblock %}
      {% block userCreate %}{% endblock %}
      {% block AuthorList %}{% endblock %}
+     {% block bookmarks %}{% endblock %}
+     {% block categories %}{% endblock %}
   </main>
 
 <footer class="bg-dark text-light pt-5 pb-4 mt-5">

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load dict_extras %}
+{% block categories %}
+<div class="container py-5">
+  <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    {% for cat in categories %}
+      <div class="col">
+        <div class="card h-100 category-card">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h5 class="card-title mb-0 text-truncate">{{ cat.type }}</h5>
+              <span class="badge bg-primary">{{ category_article_count|get_item:cat.id}}</span>
+            </div>
+            <p class="card-text text-muted mb-4">Articles in this category</p>
+            <a href="{% url 'all-categories-with-article' cat.id %}" class="btn btn-primary mt-auto w-100">Reade all article with this category</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<style>
+
+  .category-card{
+    border: 2px solid #000 !important;
+    border-radius: .75rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .category-card:hover{
+    transform: translateY(-3px);
+  }
+</style>
+{% endblock %}
