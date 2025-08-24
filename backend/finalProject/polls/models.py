@@ -81,13 +81,12 @@ class Category(models.Model):
         verbose_name='Category Type',
         help_text='Select the type of this category'
     )
-    # photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
     def __str__(self):
         return self.type
 
-    # def number_of_article(self):
-    #     return Article.objects.filter(category=self.id).count()
+    def number_of_article(self):
+        return Article.objects.filter(category=self.id).count()
 
 
 class Article(TimeStampedModel):

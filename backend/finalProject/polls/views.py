@@ -251,15 +251,23 @@ class AllCategoriesView(ListView):
     def get_context_data(self, **kwargs):
 
         ctx = super().get_context_data(**kwargs)
-
-        dirt = {}
-
-        all_categories = Category.objects.annotate(counter=Count("articles"))
-
-        count = dirt.list(map(
-            lambda cat : {"category_id" : cat.id , "number_of_articles" : cat.articles.count()}, all_categories
-        ))
-
-        ctx["article_counts"] = count
+        category_article_count = {}
+        all_categories = Category.objects.all()
+        for cat in all_categories:
+            category_article_count[cat.id] = cat.number_of_article()
+        ctx["category_article_count"] = category_article_count
         return ctx
+
+
+class ArticleAndCategoryListView(ListView):
+
+    model = Article
+    context_object_name = "articles"
+    template_name = "articles/article_list.html"
+
+    def get_queryset(self):
+       articles = Article.objects.all()
+       cat_id = Category.objects.get(pk=self.kwargs["pk"])
+       obj =  articles.filter(category=cat_id)
+       return obj
 

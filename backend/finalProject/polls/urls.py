@@ -30,5 +30,6 @@ urlpatterns = [
     path("article/<int:pk>/bookmark",Bookmarks.as_view(),name="add-bookmark"),
     path("article/bookmarks/<int:pk>" , AllBookMarkView.as_view() , name="all-bookmark"),
     path("article/categories/", AllCategoriesView.as_view() , name="all-categories"),
+    path("article/categories/<int:pk>", ArticleAndCategoryListView.as_view() , name="all-categories-with-article"),
 
 ]
