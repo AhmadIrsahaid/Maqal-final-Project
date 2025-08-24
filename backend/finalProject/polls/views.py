@@ -260,14 +260,11 @@ class AllCategoriesView(ListView):
 
 
 class ArticleAndCategoryListView(ListView):
-
     model = Article
     context_object_name = "articles"
     template_name = "articles/article_list.html"
 
     def get_queryset(self):
-       articles = Article.objects.all()
-       cat_id = Category.objects.get(pk=self.kwargs["pk"])
-       obj =  articles.filter(category=cat_id)
+       obj = Article.objects.filter(category__id=self.kwargs["pk"])
        return obj
 
