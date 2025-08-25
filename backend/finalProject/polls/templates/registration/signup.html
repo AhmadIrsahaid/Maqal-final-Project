@@ -1,127 +1,117 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنشاء حساب — Maqal Panorama</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Maqal Panorama</title>
 
-  <!-- Bootstrap + Bootstrap Icons (إصدار حديث) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"/>
-  <link href="{% static 'styles/main.css' %}" rel="stylesheet">
-</head>
-<body>
-
-  <div class="floating-shapes">
-    <div class="shape">
-      <svg width="60" height="60" viewBox="0 0 60 60">
-        <circle cx="30" cy="30" r="25" fill="none" stroke="currentColor" stroke-width="2"></circle>
-      </svg>
-    </div>
-    <div class="shape">
-      <svg width="40" height="40" viewBox="0 0 40 40">
-        <rect x="10" y="10" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"></rect>
-      </svg>
-    </div>
-    <div class="shape">
-      <svg width="50" height="50" viewBox="0 0 50 50">
-        <polygon points="25,5 45,40 5,40" fill="none" stroke="currentColor" stroke-width="2"></polygon>
-      </svg>
-    </div>
-  </div>
-
-  <div class="controls-panel">
-    <button class="control-btn active" id="arabicBtn" onclick="setLanguage('ar')">
-      <i class="bi bi-globe2"></i><span>العربية</span>
-    </button>
-    <button class="control-btn" id="englishBtn" onclick="setLanguage('en')">
-      <i class="bi bi-globe2"></i><span>English</span>
-    </button>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="تبديل الثيم">
-      <i class="bi bi-brightness-high" id="themeIcon"></i>
-    </button>
-  </div>
-
-
-  <div class="login-container">
-    <div class="login-card">
-
-      <div class="logo-section">
-        <div class="logo-icon" style="width: 150px;">
-            <img src="{% static 'images/Maqal-pano-logo.svg' %}" alt="logo" />
-        </div>
-        <h1 class="login-title" data-ar="إنشاء حساب جديد" data-en="Create Your Account">إنشاء حساب جديد</h1>
-        <p class="login-subtitle"
-           data-ar="أنشئ حسابك للوصول إلى المقالات والميزات"
-           data-en="Sign up to access articles and features">
-          أنشئ حسابك للوصول إلى المقالات والميزات
-        </p>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+    />
+    <link href="{% static 'styles/main.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="floating-shapes">
+      <div class="shape">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle
+            cx="30"
+            cy="30"
+            r="25"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          ></circle>
+        </svg>
       </div>
+      <div class="shape">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <rect
+            x="10"
+            y="10"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          ></rect>
+        </svg>
+      </div>
+      <div class="shape">
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <polygon
+            points="25,5 45,40 5,40"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          ></polygon>
+        </svg>
+      </div>
+    </div>
 
-      <!-- أخطاء عامة للفورم (مهم جدًا) -->
-      {% if form.non_field_errors %}
+    <div class="controls-panel">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+        <i class="bi bi-brightness-high" id="themeIcon"></i>
+      </button>
+    </div>
+
+    <div class="login-container">
+      <div class="login-card">
+        <div class="logo-section">
+          <div class="logo-icon" style="width: 150px">
+            <img src="{% static 'images/Maqal-pano-logo.svg' %}" alt="logo" />
+          </div>
+          <h1 class="login-title" data-en="Create Your Account">
+            Create Your Account
+          </h1>
+          <p class="login-subtitle">Sign up to access articles and features</p>
+        </div>
+
+        {% if form.non_field_errors %}
         <div class="alert alert-danger mb-3">
           {{ form.non_field_errors|striptags }}
         </div>
-      {% endif %}
+        {% endif %}
 
-      <!-- نموذج التسجيل -->
-      <form id="loginForm" method="post" data-demo="true">
-        {% csrf_token %}
-
-        {% for field in form %}
-          <div class="form-group mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-
-            <div class="position-relative">
-              {{ field }}
-
-              {# أيقونات حسب اسم الحقل #}
-              {% if field.name == 'username' %}
-                <i class="input-icon bi bi-person"></i>
-              {% elif field.name == 'email' %}
-                <i class="input-icon bi bi-at"></i>
-              {% elif field.name == 'password' or field.name == 'password1' or field.name == 'password2' %}
-                <button type="button" class="password-toggle"
-                        onclick="togglePassword('{{ field.id_for_label }}')"
-                        aria-label="إظهار/إخفاء كلمة السر">
-                  <i class="bi bi-eye toggle-icon-{{ field.id_for_label }}"></i>
-                </button>
-              {% endif %}
+        <form method="post" action="{% url 'signup' %}">
+          {% csrf_token %} {% for field in form %}
+          <div class="mb-3">
+            {{ field.label_tag }} {{ field }} {% if field.help_text %}
+            <small class="form-text text-muted" style="display: none"
+              >{{ field.help_text }}</small
+            >
+            {% endif %} {% if field.errors %}
+            <div class="text-danger small">
+              {% for error in field.errors %}
+              <div>{{ error }}</div>
+              {% endfor %}
             </div>
-
-            {% if field.help_text %}
-              <div class="form-text">{{ field.help_text|safe }}</div>
-            {% endif %}
-
-            {% if field.errors %}
-              <div class="invalid-feedback d-block">
-                {{ field.errors|striptags }}
-              </div>
             {% endif %}
           </div>
-        {% endfor %}
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100">Sign up</button>
+        </form>
 
-        <div class="d-grid mt-3">
-          <button type="submit" class="btn btn-login btn-lg">
-            <i class="bi bi-person-plus me-2"></i>
-            <span data-ar="إنشاء الحساب" data-en="Sign Up">إنشاء الحساب</span>
-          </button>
+        <div class="signup-link mt-4 text-center muted-link">
+          <span data-en="Already have an account?"
+            >Already have an account?</span
+          >
+          <a href="{% url 'login' %}" data-en="Log in">Log in</a>
         </div>
-      </form>
-
-      <!-- رابط تحويل لصفحة الدخول -->
-      <div class="signup-link mt-4 text-center muted-link">
-        <span data-ar="لديك حساب بالفعل؟" data-en="Already have an account?">لديك حساب بالفعل؟</span>
-        <a href="{% url 'login' %}" data-ar="تسجيل الدخول" data-en="Log in">تسجيل الدخول</a>
       </div>
     </div>
-  </div>
 
-  <!-- سكربتات -->
-  <script src="{% static 'scripts/script.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="{% static 'scripts/script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

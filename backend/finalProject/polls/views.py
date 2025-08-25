@@ -3,9 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-)
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q, Count
@@ -14,6 +12,18 @@ from polls.form import ReaderCreationForm, ReaderSignUpForm, AddComment, LikeFor
 from django.views import View
 from django.contrib import messages
 from typing import List
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from .form import ReaderCreationForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth import get_user_model
+from django.core.mail import EmailMessage
+
 def home(request):
     return JsonResponse({
         'message': 'Welcome from Django!',
@@ -166,13 +176,24 @@ class ReaderSignUpView(CreateView):
     template_name = "registration/signup.html"
 
     def form_valid(self, form):
-        user = form.save()
-        auth_user = authenticate(self.request,
-                                 email=form.cleaned_data.get("email"),
-                                 password=form.cleaned_data.get("password1"))
-        if auth_user:
-            login(self.request, auth_user)
-        return super().form_valid(form)
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        activation_link = self.request.build_absolute_uri(
+            reverse('activate', kwargs={'uidb64': uid, 'token': token})
+        )
+        message = render_to_string(
+            'registration/acc_active_email.html', {
+                'user': user,
+                'activation_link':activation_link,
+            }
+        )
+        print(message)
+        return HttpResponse('Please confirm your email address to complete the registration')
+
+
 
 
 class CommentCreateView(CreateView):
@@ -194,13 +215,11 @@ class SearchResultsView(ListView):
     model = Article
     context_object_name = "articles"
     template_name = "articles/article_list.html"
-    # target_date =
 
     def get_queryset(self):
         query = self.request.GET.get("q")
         return Article.objects.filter(
             Q(title__icontains=query)
-            # | Q(Article.objects.filter(publication_date=target_date))
         )
 
 class LikeToggleView(LoginRequiredMixin, View):
@@ -268,3 +287,43 @@ class ArticleAndCategoryListView(ListView):
        obj = Article.objects.filter(category__id=self.kwargs["pk"])
        return obj
 
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        User = get_user_model()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+def signup(request):
+
+    if request.method == "POST":
+        form = ReaderSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = "Your account has been created"
+            message = render_to_string(
+                'registration/acc_active_email.html' , {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                }
+            )
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+            return redirect('activate/<uidb64>/<token>/' )
+    else:
+        form = SignupForm()
+    return render(request, 'registration/signup.html', {'form': form})
