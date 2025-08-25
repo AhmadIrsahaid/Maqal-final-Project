@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import  User
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-
 class ReaderCreationForm(UserCreationForm):
     class Meta:
         model = User
@@ -66,4 +65,6 @@ class LikeForm(forms.Form):
 
 class BookmarkForm(forms.Form):
     pass
+
+
 
