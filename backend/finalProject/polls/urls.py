@@ -32,6 +32,7 @@ urlpatterns = [
     path("article/categories/<int:pk>", ArticleAndCategoryListView.as_view() , name="all-categories-with-article"),
     re_path(r'^signup/$', ReaderSignUpView.as_view(), name='signup'),
     path('activate/<uidb64>/<token>/', UserActivateView.as_view(), name='activate'),
-    path('password-reset/', ResetPasswordView.as_view(), name='password-reset')
+    path('password-reset/', ResetPasswordView.as_view(), name='password-reset'),
+    path( "article/likes/<int:pk>" , AllLikeView.as_view() , name="all-likes")
 
 ]

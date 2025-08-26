@@ -122,7 +122,7 @@ class BookMarks(TimeStampedModel):
 class Likes(models.Model):
         date_of_like = models.DateTimeField(auto_now_add=True)
         article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name='article_likes', null=True, blank=True)
-        reader = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+        reader = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='likes')
 
 
 class Comments(models.Model):

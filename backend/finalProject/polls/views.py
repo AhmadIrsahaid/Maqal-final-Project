@@ -264,6 +264,14 @@ class AllBookMarkView(ListView):
     def get_queryset(self):
         return Article.objects.filter(bookmarks__reader=self.request.user)
 
+class AllLikeView(ListView):
+    model = Article
+    template_name = "articles/allLikes.html"
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        return Article.objects.filter(article_likes__reader=self.request.user)
+
 
 class AllCategoriesView(ListView):
     model = Category
@@ -317,3 +325,5 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       "please make sure you've entered the address you registered with, and check your spam folder."
 
     success_url = reverse_lazy('home')
+
+
