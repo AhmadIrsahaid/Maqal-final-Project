@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maqal Panorama</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"/>
 
   <link href="{% static 'styles/main.css' %}" rel="stylesheet">
 </head>
@@ -31,12 +31,7 @@
   </div>
 
   <div class="controls-panel">
-    <button class="control-btn active" id="arabicBtn" onclick="setLanguage('ar')">
-      <i class="bi bi-globe2"></i><span>العربية</span>
-    </button>
-    <button class="control-btn" id="englishBtn" onclick="setLanguage('en')">
-      <i class="bi bi-globe2"></i><span>English</span>
-    </button>
+
     <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
       <i class="bi bi-brightness-high" id="themeIcon"></i>
     </button>
@@ -48,9 +43,9 @@
         <div class="logo-icon" style="width: 150px;">
             <img src="{% static 'images/Maqal-pano-logo.svg' %}" alt="logo" />
         </div>
-        <h1 class="login-title" data-ar="مرحباً بعودتك" data-en="Welcome Back">مرحباً بعودتك</h1>
-        <p class="login-subtitle" data-ar="قم بتسجيل الدخول للوصول إلى حسابك" data-en="Sign in to access your account">
-          قم بتسجيل الدخول للوصول إلى حسابك
+        <h1 class="login-title" >Welcome Back</h1>
+        <p class="login-subtitle" >
+          Sign in to access your account
         </p>
       </div>
 
@@ -85,24 +80,24 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="rememberMe">
-            <label class="form-check-label" for="rememberMe" data-ar="تذكرني" data-en="Remember me">تذكرني</label>
+            <label class="form-check-label" for="rememberMe" >Remember me</label>
           </div>
           <a href="#" class="text-decoration-none" style="color: var(--primary-color); font-size: 0.9rem;"
-             data-ar="نسيت كلمة المرور؟" data-en="Forgot Password?">نسيت كلمة المرور؟</a>
+             >Forgot Password?</a>
         </div>
 
         <div class="d-grid mt-4">
           <button type="submit" class="btn btn-login btn-lg">
             <i class="bi bi-box-arrow-in-left me-2" id="loginIcon"></i>
-            <span data-ar="تسجيل الدخول" data-en="Log In">تسجيل الدخول</span>
+            <span>Log In</span>
           </button>
         </div>
       </form>
 
       <div class="signup-link mt-4 text-center muted-link">
-        <span data-ar="ليس لديك حساب؟" data-en="Don't have an account?">ليس لديك حساب؟</span>
+        <span>Don't have an account?</span>
 
-        <a href="{% url 'signup' %}" data-ar="إنشاء حساب جديد" data-en="Sign up here">إنشاء حساب جديد</a>
+        <a href="{% url 'signup' %}" >Sign up here</a>
       </div>
     </div>
   </div>

@@ -1,12 +1,14 @@
 # polls/urls.py
-from django.urls import path ,include
+from django.urls import path ,include ,re_path
 from . import views
 from polls.views import *
 from django.views.generic import TemplateView
 
+
 from .form import BookmarkForm
 
 urlpatterns = [
+
     path("accounts/", include("django.contrib.auth.urls")),
     # path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path('api/home/', views.home, name='home'),
@@ -22,7 +24,7 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home-page'),
     # path('', views.BasePageView.as_view(), name='base-page'),
     path('about/', views.AboutPageView.as_view(), name='about-page'),
-    path("signup/", ReaderSignUpView.as_view(), name="signup"),
+    # path("signup/", ReaderSignUpView.as_view(), name="signup"),
     path("article/<int:pk>/comment/", CommentCreateView.as_view(), name="article-add-comment"),
     path("search/", SearchResultsView.as_view(), name="search_results"),
     path("likes/<int:pk>",LikeToggleView.as_view(),name="add-like"),
@@ -31,5 +33,7 @@ urlpatterns = [
     path("article/bookmarks/<int:pk>" , AllBookMarkView.as_view() , name="all-bookmark"),
     path("article/categories/", AllCategoriesView.as_view() , name="all-categories"),
     path("article/categories/<int:pk>", ArticleAndCategoryListView.as_view() , name="all-categories-with-article"),
+    re_path(r'^signup/$', ReaderSignUpView.as_view(), name='signup'),
+    path('activate/<uidb64>/<token>/', UserActivateView.as_view(), name='activate')
 
 ]

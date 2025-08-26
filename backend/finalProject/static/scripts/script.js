@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setLanguage(savedLang, false);
   setTheme(savedTheme, false);
 
-  // تزيين التركيز على الحقول
+
   document.querySelectorAll(".form-control").forEach((input) => {
     input.addEventListener("focus", function () {
       this.parentElement.classList.add("focused");
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // معالجة إرسال النموذج (بدون منع الإرسال الحقيقي)
   const form = document.getElementById("loginForm");
   if (form) {
     form.addEventListener("submit", function (e) {
@@ -34,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (isDemo) {
-        // وضع العرض فقط: لا نرسل الطلب
+
         e.preventDefault();
         setTimeout(() => {
           this.classList.remove("loading");
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
           );
         }, 1500);
       }
-      // غير ذلك: لا نمنع الإرسال الحقيقي
     });
   }
 });
@@ -65,7 +63,6 @@ function syncDirAwareIcons() {
     // Bootstrap Icons
     i.classList.toggle("bi-arrow-right-short", rtl);
     i.classList.toggle("bi-arrow-left-short", !rtl);
-    // احتياطي لـ FA إن استخدمته
     i.classList.toggle("fa-arrow-right", rtl);
     i.classList.toggle("fa-arrow-left", !rtl);
   });
@@ -82,7 +79,7 @@ function setLanguage(lang, animate = true) {
   html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
   body.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
 
-  // أيقونة زر الدخول تتبدّل اتجاهاً
+
   const loginIcon = document.getElementById("loginIcon");
   if (loginIcon) {
     if (lang === "ar") {
@@ -210,12 +207,12 @@ function showMessage(message, type) {
   setTimeout(() => alertDiv.remove(), 5000);
 }
 
-// تحسين بسيط للعرض
+
 window.addEventListener("load", function () {
   document.body.style.opacity = "1";
 });
 
-// اختصار: Ctrl+Enter يرسل النموذج
+
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter" && e.ctrlKey) {
     const form = document.getElementById("loginForm");
