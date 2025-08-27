@@ -66,7 +66,10 @@
       <span class="visually-hidden">Toggle Dropdown</span>
     </a>
     <ul class="dropdown-menu">
+        {% if user.pk %}
       <li><a class="dropdown-item" href="{% url 'all-bookmark' user.id %}">All Bookmarks</a></li>
+      <li><a class="dropdown-item" href="{% url 'all-likes' user.id %}">All likes</a></li>
+        {% endif %}
       <li><a class="dropdown-item" href="{% url 'all-categories' %}">All Categories</a></li>
       <hr class="dropdown-divider"/>
       <li>
@@ -96,6 +99,8 @@
      {% block AuthorList %}{% endblock %}
      {% block bookmarks %}{% endblock %}
      {% block categories %}{% endblock %}
+      {% block AllLikes %}{% endblock %}
+
   </main>
 
 <footer class="bg-dark text-light pt-5 pb-4 mt-5">
