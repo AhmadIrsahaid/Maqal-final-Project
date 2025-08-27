@@ -1,4 +1,5 @@
 # views.py
+from django.contrib.auth.forms import PasswordResetForm
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
@@ -24,6 +25,9 @@ from .tokens import account_activation_token
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 # from CorrectPythonPackage.token import *
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 def home(request):
     return JsonResponse({
         'message': 'Welcome from Django!',
@@ -302,3 +306,14 @@ class UserActivateView(View):
         else:
             return HttpResponse('Activation link is invalid!')
 
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = "registration/password_reset.html"
+    email_template_name = "registration/password_reset_email.html"
+    subject_template_name = 'registration/password_reset_subject'
+
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+
+    success_url = reverse_lazy('home')

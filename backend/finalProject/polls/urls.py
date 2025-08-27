@@ -10,7 +10,6 @@ from .form import BookmarkForm
 urlpatterns = [
 
     path("accounts/", include("django.contrib.auth.urls")),
-    # path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path('api/home/', views.home, name='home'),
     path('api/card/' , views.list_articles , name='list_articles'),
     path('article/create/', ArticleCreateView.as_view() , name='create-article'),
@@ -22,9 +21,7 @@ urlpatterns = [
     path('user/create/', UserCreateView.as_view() , name='user-create'),
     path('user/detail/<int:pk>/', UserDetailView.as_view() , name='user-detail'),
     path('', views.HomePageView.as_view(), name='home-page'),
-    # path('', views.BasePageView.as_view(), name='base-page'),
     path('about/', views.AboutPageView.as_view(), name='about-page'),
-    # path("signup/", ReaderSignUpView.as_view(), name="signup"),
     path("article/<int:pk>/comment/", CommentCreateView.as_view(), name="article-add-comment"),
     path("search/", SearchResultsView.as_view(), name="search_results"),
     path("likes/<int:pk>",LikeToggleView.as_view(),name="add-like"),
@@ -34,6 +31,7 @@ urlpatterns = [
     path("article/categories/", AllCategoriesView.as_view() , name="all-categories"),
     path("article/categories/<int:pk>", ArticleAndCategoryListView.as_view() , name="all-categories-with-article"),
     re_path(r'^signup/$', ReaderSignUpView.as_view(), name='signup'),
-    path('activate/<uidb64>/<token>/', UserActivateView.as_view(), name='activate')
+    path('activate/<uidb64>/<token>/', UserActivateView.as_view(), name='activate'),
+    path('password-reset/', ResetPasswordView.as_view(), name='password-reset')
 
 ]
