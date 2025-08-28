@@ -16,17 +16,20 @@
 <body class="d-flex flex-column min-vh-100 {% block body_class %}{% endblock %}">
 
   <main class="flex-grow-1">
+
  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom py-2"  >
   <div class="container px-4 px-lg-16">
-    <a class="navbar-brand fw-semibold" href="/">
+    <a class="navbar-brand fw-semibold" {% if user.pk %} href="/"{% endif %}  >
   <img
-    src="../../static/images/Maqal-pano-logo.svg"
+    src="{% static 'images/Maqal-pano-logo.svg' %}"
     alt="Maqal Panorama"
     class="brand-logo d-inline-block align-text-top "
     style="height:70px; width:auto; display:block"
     onerror="this.onerror=null; this.src='/static/images/pano%20light-03.svg';"
   >
 </a>
+ {% if user.pk %}
+
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -84,6 +87,7 @@
     </div>
     </div>
   </div>
+ {% endif %}
 </nav>
 
     {% block content %}{% endblock %}
@@ -127,7 +131,9 @@
       <div class="col-6 col-md-3">
         <h6 class="fw-semibold mb-3">Company</h6>
         <ul class="list-unstyled small">
-          <li><a class="text-decoration-none link-light-50" href="{% url 'about-page' %}">About</a></li>
+            {% if user.pk %}
+            	<li><a class="text-decoration-none link-light-50" href="{% url 'about-page' %}">About</a></li>
+            {% endif %}
           <li><a class="text-decoration-none link-light-50" href="#">Careers</a></li>
           <li><a class="text-decoration-none link-light-50" href="#">News</a></li>
           <li><a class="text-decoration-none link-light-50" href="#">Contact</a></li>
@@ -148,7 +154,7 @@
         <h6 class="fw-semibold mb-3">Contact</h6>
         <ul class="list-unstyled small mb-3">
           <li class="mb-1"><i class="fa-solid fa-location-dot me-2"></i>Nablus, Palestine</li>
-          <li class="mb-1"><i class="fa-regular fa-envelope me-2"></i>info@example.com</li>
+          <li class="mb-1"><i class="fa-regular fa-envelope me-2"></i>info@MAQAL.com</li>
           <li><i class="fa-solid fa-phone me-2"></i>+970 59 000 0000</li>
         </ul>
         <div class="d-flex gap-3">

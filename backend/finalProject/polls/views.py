@@ -172,6 +172,16 @@ class UserDetailView(DetailView):
     template_name = "users/detail_user.html"
     context_object_name = "user"
 
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = "users/delete_user.html"
+    context_object_name = "user"
+
+class UserUpdateView(UpdateView):
+    model = User
+    fields = "__all__"
+    template_name = "users/edit_user.html"
+    success_url = reverse_lazy("user-list")
 
 
 class ReaderSignUpView(CreateView):
