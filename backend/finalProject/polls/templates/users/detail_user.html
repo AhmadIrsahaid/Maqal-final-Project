@@ -45,8 +45,8 @@
 
       <div class="d-flex gap-2 mt-4">
         <a href="{% url 'user-list' %}"  class="btn btn-outline-secondary">← Back to list</a>
-        <a href="" class="btn btn-primary">Edit</a>
-        <a href="#"  class="btn btn-danger">
+        <a href="{% url 'user-edit' user.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'user-delete' user.pk %}"  class="btn btn-danger">
           Delete
         </a>
       </div>
