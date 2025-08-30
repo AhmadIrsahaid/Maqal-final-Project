@@ -30,8 +30,6 @@
 </a>
  {% if user.pk %}
 
-
-
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +86,14 @@
     </div>
   </div>
  {% endif %}
+
+
+     {% if not user.pk %}
+    <div class="d-flex align-items-center gap-2 ms-lg-2 my-2 my-lg-0">
+         <a class="btn btn-outline-danger" href="{% url 'login'  %}">login</a>
+    <a class="btn btn-outline-danger" href="{% url 'signup'  %}">signup</a>
+     </div>
+     {% endif %}
 </nav>
 
     {% block content %}{% endblock %}
